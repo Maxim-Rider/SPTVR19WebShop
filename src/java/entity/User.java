@@ -5,6 +5,7 @@
  */
 package entity;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.annotation.Generated;
@@ -23,29 +24,23 @@ public class User implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String login;
     private String password;
-    private String role;
+
     @OneToOne
     private Buyer buyer;
 
     public User() {
     }
 
-    public User(String login, String password, String role, Buyer buyer) {
+    public User(String login, String password, Buyer buyer) {
         this.login = login;
         this.password = password;
-        this.role = role;
         this.buyer = buyer;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+  
 
     public String getLogin() {
         return login;
@@ -76,7 +71,6 @@ public class User implements Serializable{
         return "User{" 
                 + "login=" + login 
                 + ", password=" + password 
-                + ", role=" + role 
                 + ", buyer=" + buyer.getFirstname()
                 + " " + buyer.getLastname()
                 + '}';
@@ -87,7 +81,6 @@ public class User implements Serializable{
         int hash = 5;
         hash = 19 * hash + Objects.hashCode(this.login);
         hash = 19 * hash + Objects.hashCode(this.password);
-        hash = 19 * hash + Objects.hashCode(this.role);
         hash = 19 * hash + Objects.hashCode(this.buyer);
         return hash;
     }
@@ -110,9 +103,7 @@ public class User implements Serializable{
         if (!Objects.equals(this.password, other.password)) {
             return false;
         }
-        if (!Objects.equals(this.role, other.role)) {
-            return false;
-        }
+        
         if (!Objects.equals(this.buyer, other.buyer)) {
             return false;
         }

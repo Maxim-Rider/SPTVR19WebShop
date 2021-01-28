@@ -11,11 +11,22 @@
         <h1>Список товаров:</h1>
         <a href="index.jsp"><Магазин></a><br>
         <ol>
+            <form action="editFurnitureForm" method="POST">
+            <select name="furnitureId" multiple="true">
+                <option value="">Список товаров:</option>
             <c:forEach var="furniture" items="${listFurnitures}" varStatus="status">
                 <li>
-                    <b>Товар:</b> ${furniture.name} | <b>Цвет:</b> ${furniture.color} | <b>Размер:</b> ${furniture.size} | <b>Количество:</b> ${furniture.quantity} | <b>Цена:</b> ${furniture.price}$ | <a href="editFurnitureForm?furnitureId=${furniture.id}">Изменить</a>
+                    <option>
+                    Товар: ${furniture.name} 
+                    | Цвет: ${furniture.color} 
+                    | Размер: ${furniture.size} 
+                    | Количество: ${furniture.quantity} 
+                    | Цена: ${furniture.price}$
+                    </option>
                 </li>
             </c:forEach>
+            </select>
+            <input type="submit" value="Изменить выбранный товар">
         </ol>
     </body>
 </html>

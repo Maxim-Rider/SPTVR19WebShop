@@ -19,13 +19,7 @@
                   <option value="${furniture.id}">Название: ${furniture.name} | Цвет: ${furniture.color} | Размер: ${furniture.size} | Количество: ${furniture.quantity} | Цена: ${furniture.price}</option>
               </c:forEach>
         </select>
-        <p>Выберите покупателя</p>
-        <select name="buyerId">
-          <option value="">Выберите покупателя:</option>
-              <c:forEach var="buyer" items="${listBuyers}" varStatus="status">
-                  <option value="${buyer.id}">Имя: ${buyer.firstname} | Фамилия: ${buyer.lastname} | Телефон: ${buyer.phone} | Наличные: ${buyer.wallet}.</option>
-              </c:forEach>
-        </select>
+        
         <br><br>
         
         <input type="submit" name="submit" value="Купить товар">

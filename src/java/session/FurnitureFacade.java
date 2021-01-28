@@ -12,7 +12,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author Juri
+ * @author Comp
  */
 @Stateless
 public class FurnitureFacade extends AbstractFacade<Furniture> {
@@ -28,5 +28,5 @@ public class FurnitureFacade extends AbstractFacade<Furniture> {
     public FurnitureFacade() {
         super(Furniture.class);
     }
-    
+
 }

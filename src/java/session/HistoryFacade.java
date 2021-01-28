@@ -5,6 +5,7 @@
  */
 package session;
 
+import entity.Buyer;
 import entity.History;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author Juri
+ * @author Comp
  */
 @Stateless
 public class HistoryFacade extends AbstractFacade<History> {
@@ -31,9 +32,10 @@ public class HistoryFacade extends AbstractFacade<History> {
         super(History.class);
     }
     
-    public List<History> findReadFurniture() {
+    public List<History> findHistoriesWithFurniture(Buyer buyer) {
         try {
-            return em.createQuery("SELECT h FROM History h WHERE h.returnDate = NULL")
+            return em.createQuery("SELECT h FROM History h WHERE h.takeonDate = NULL AND h.buyer = :buyer")
+                    .setParameter("buyer", buyer)
                     .getResultList();
         } catch (Exception e) {
             return new ArrayList<>();

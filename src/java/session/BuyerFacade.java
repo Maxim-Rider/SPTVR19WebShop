@@ -12,7 +12,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author Juri
+ * @author Comp
  */
 @Stateless
 public class BuyerFacade extends AbstractFacade<Buyer> {
@@ -28,5 +28,6 @@ public class BuyerFacade extends AbstractFacade<Buyer> {
     public BuyerFacade() {
         super(Buyer.class);
     }
-    
+
+
 }
