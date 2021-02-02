@@ -44,6 +44,14 @@ public class Buyer implements Serializable{
         setWallet(wallet);
     }
 
+    
+   
+    
+    
+
+    
+    
+
     public String getFirstname() {
         return firstname;
     }

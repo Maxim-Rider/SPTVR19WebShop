@@ -4,6 +4,8 @@ import entity.Buyer;
 import entity.Furniture;
 import entity.History;
 import entity.User;
+import entity.Role;
+import entity.UserRoles;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.GregorianCalendar;
@@ -18,8 +20,9 @@ import javax.servlet.http.HttpSession;
 import session.BuyerFacade;
 import session.FurnitureFacade;
 import session.HistoryFacade;
-
+import session.RoleFacade;
 import session.UserFacade;
+import session.UserRolesFacade;
 
 /**
  *
@@ -29,8 +32,8 @@ import session.UserFacade;
     "/showLoginForm",
     "/login",
     "/logout",
-    "/addBuyer",
-    "/createBuyer",
+    "/registrationForm",
+    "/registration",
     "/listFurnitures",
 })
 public class LoginServlet extends HttpServlet {
@@ -47,6 +50,37 @@ public class LoginServlet extends HttpServlet {
     private HistoryFacade historyFacade;
     
     private Buyer buyer;
+    
+    @EJB private RoleFacade roleFacade;
+    @EJB private UserRolesFacade userRolesFacade;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        if(userFacade.findAll().size() > 0) return;
+        //Создаем суппер администратора
+        Buyer buyer = new Buyer("Max", "Kolesnikov", "58007334", "500");
+        buyerFacade.create(buyer);
+        User user = new User("admin", "12345", buyer);
+        userFacade.create(user);
+
+        //Создаем и назначаем роли пользователю
+        Role role = new Role("ADMIN");
+        roleFacade.create(role);
+        UserRoles userRoles = new UserRoles(user, role);
+        userRolesFacade.create(userRoles);
+
+        role = new Role("MANAGER");
+        roleFacade.create(role);
+        userRoles = new UserRoles(user, role);
+        userRolesFacade.create(userRoles);
+
+        role = new Role("BUYER");
+        roleFacade.create(role);
+        userRoles = new UserRoles(user, role);
+        userRolesFacade.create(userRoles);
+
+    }
 
 
 
@@ -98,10 +132,10 @@ public class LoginServlet extends HttpServlet {
                 break;
                 
             
-            case "/addBuyer":
-                request.getRequestDispatcher("/WEB-INF/addBuyerForm.jsp").forward(request, response);
+            case "/registrationForm":
+                request.getRequestDispatcher("/WEB-INF/registrationForm.jsp").forward(request, response);
                 break;
-            case "/createBuyer":
+            case "/registration":
                 String firstname = request.getParameter("firstname");
                 String lastname = request.getParameter("lastname");
                 String phone = request.getParameter("phone");
@@ -120,13 +154,16 @@ public class LoginServlet extends HttpServlet {
                     request.setAttribute("phone", phone);
                     request.setAttribute("wallet", wallet);
                     request.setAttribute("info", "Заполните все поля..");
-                    request.getRequestDispatcher("/WEB-INF/addBuyerForm.jsp").forward(request, response); 
+                    request.getRequestDispatcher("/WEB-INF/addBuyerForm").forward(request, response); 
                     break;
                 }
                 buyer = new Buyer(firstname, lastname, phone, wallet);
                 buyerFacade.create(buyer);
                 user = new User(login, password, buyer);
                 userFacade.create(user);
+                Role roleBuyer = roleFacade.findByName("BUYER");
+                UserRoles userRoles = new UserRoles(user, roleBuyer);
+                userRolesFacade.create(userRoles);
                 request.setAttribute("info", "Покупатель\"" +buyer.getFirstname()+" " +buyer.getLastname()+ "\" был зарегестрирован");
                 request.getRequestDispatcher("index.jsp").forward(request, response);
                 break;
@@ -135,6 +172,8 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("listFurnitures", listFurnitures);
                 request.getRequestDispatcher("/WEB-INF/listFurnitures.jsp").forward(request, response);
                 break;
+                
+            
             
         }
     }

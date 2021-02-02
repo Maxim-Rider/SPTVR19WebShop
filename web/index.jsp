@@ -11,7 +11,7 @@
         <h1>Магазин Мягкой Мебели</h1>
         <p>${info}</p>
         <b>Основная программа:</b><br><hr>
-        <a href="addBuyer">Регистрация нового пользователя</a><hr>
+        <a href="registrationForm">Регистрация нового пользователя</a><br><hr>
         <a href="showLoginForm">Войти</a><br><hr>
         <a href="addFurniture">Добавить товар</a><hr>
         <a href="listFurnitures">Список товара</a><hr>

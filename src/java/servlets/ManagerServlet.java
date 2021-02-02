@@ -21,10 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.BuyerFacade;
 import session.FurnitureFacade;
-
 import session.HistoryFacade;
-
 import session.UserFacade;
+import session.UserRolesFacade;
 
 /**
  *
@@ -35,7 +34,6 @@ import session.UserFacade;
     "/createFurniture",
     "/editFurnitureForm",
     "/editFurniture",
-    "/listBuyers",
 
 })
 public class ManagerServlet extends HttpServlet {
@@ -51,6 +49,9 @@ public class ManagerServlet extends HttpServlet {
 
     @EJB
     private BuyerFacade buyerFacade;
+    
+    @EJB private UserRolesFacade userRolesFacade;
+    
     private Furniture furniture;
     private String furnitureId;
 
@@ -79,8 +80,9 @@ public class ManagerServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
             return;
         }
-        if(!"manager".equals(user.getLogin())){
-            request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему");
+        boolean isRole = userRolesFacade.isRole("MANAGER", user);
+        if(!isRole){
+            request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему с соответствующими правами");
             request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
             return;
         }
@@ -166,11 +168,7 @@ public class ManagerServlet extends HttpServlet {
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
                 break;     
             
-            case "/listBuyers":
-                List<Buyer> listBuyers = buyerFacade.findAll();
-                request.setAttribute("listBuyers", listBuyers);
-                request.getRequestDispatcher("/WEB-INF/listBuyers.jsp").forward(request, response);
-                break;
+           
         }
     }
 
