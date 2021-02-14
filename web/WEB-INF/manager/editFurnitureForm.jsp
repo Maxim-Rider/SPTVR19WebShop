@@ -5,16 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Редактирование товара</title>
-    </head>
-    <body>
+
         <h1>Редактирование товара</h1>
-        <p>${info}</p>
-        <p><a href="index.jsp"><Магазин></a></p>
+
         <form action="editFurniture" method="POST">
             <input type="hidden" name="furnitureId" value="${furniture.id}">
             Название товара: <input type="text" name="name" value="${furniture.name}"><br>
@@ -24,5 +17,4 @@
             Цена: <input type="text" name="price" value="${furniture.price}"><br>
             <input type="submit" name="submit" value="Изменить">
         </form>
-    </body>
-</html> 
+    

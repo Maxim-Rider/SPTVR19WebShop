@@ -54,9 +54,11 @@ public class UserServlet extends HttpServlet {
     
     private List<Furniture> listFurnitures;
     private List<Buyer> listBuyers;
-    private Furniture furniture;
     private Buyer buyer;
+    private Furniture furniture;
     private History history;
+
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -74,20 +76,20 @@ public class UserServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if(session == null){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         User user = (User) session.getAttribute("user");
         if(user == null){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         
         boolean isRole = userRolesFacade.isRole("BUYER", user);
         if(!isRole){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему с соответствующими правами");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         
@@ -99,14 +101,14 @@ public class UserServlet extends HttpServlet {
                 request.setAttribute("listFurnitures", listFurnitures);
                 listBuyers = buyerFacade.findAll();
                 request.setAttribute("listBuyers", listBuyers);
-                request.getRequestDispatcher("/WEB-INF/purchaseFurnitureForm.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("purchaseFurniture")).forward(request, response);
                 break;
             case "/purchaseFurniture":
                 String furnitureId = request.getParameter("furnitureId");
-                furniture = furnitureFacade.find(Long.parseLong(furnitureId));
-                String buyerId = request.getParameter("buyerId");
-                buyer = buyerFacade.find(Long.parseLong(buyerId));
-
+                Furniture furniture = furnitureFacade.find(Long.parseLong(furnitureId));
+//                String buyerId = request.getParameter("buyerId");
+//                Buyer buyer = buyerFacade.find(Long.parseLong(buyerId));
+                Buyer buyer = user.getBuyer();
                 if (!(furniture.getQuantity()-1>=0)) {
                     request.setAttribute("info", "Нет товара");
                     request.getRequestDispatcher("/index.jsp").forward(request, response);
@@ -122,11 +124,11 @@ public class UserServlet extends HttpServlet {
                 buyerFacade.edit(buyer);
                 furniture.setQuantity(furniture.getQuantity() - 1);
                 furnitureFacade.edit(furniture);
-                history = new History(furniture, buyer, new GregorianCalendar().getTime());
+                History history = new History(furniture, buyer, new GregorianCalendar().getTime());
                 historyFacade.create(history);
 
                 request.setAttribute("info", "Товар '" + furniture.getName() + "' успешно куплен покупателем " + buyer.getFirstname() + " " + buyer.getLastname() + "!");
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
                 break;
         }
     }

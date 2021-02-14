@@ -14,7 +14,7 @@ import javax.persistence.Id;
 
 /**
  *
- * @author Juri
+ * @author Comp
  */
 @Entity
 public class Furniture implements Serializable{
@@ -39,6 +39,55 @@ public class Furniture implements Serializable{
         this.quantity = quantity;
         this.price = price;
     }
+    public Furniture(String name, String color, String size, String quantity, String price) {
+        this.name = name;
+        this.color = color;
+        this.size = size;
+        this.setQuantity(quantity);
+        this.setPrice(price);
+    }
+    public Furniture(String name, String color, String size, Double quantity, Double price) {
+        this.name = name;
+        this.color = color;
+        this.size = size;
+        this.setQuantity(quantity);
+        this.setPrice(price);
+    }
+    public String getPriceToStr(){
+        double dPrice = this.price/100;
+        return String.format("%.2f", dPrice);
+    }
+
+    private void setPrice(Double price) {
+        this.price = (int)(price*100);
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+    
+    public String getQuantityToStr(){
+        double dQuantity = this.quantity/100;
+        return String.format("%.2f", dQuantity);
+    }
+
+    private void setQuantity(Double quantity) {
+        this.quantity = (int)(price*100);
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    
 
     public Long getId() {
         return id;
@@ -72,21 +121,24 @@ public class Furniture implements Serializable{
         this.size = size;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
+//    public Integer getQuantity() {
+//        return quantity;
+//    }
+//
+//    public void setQuantity(Integer quantity) {
+//        this.quantity = quantity;
+//    }
+//
+//    public Integer getPrice() {
+//        return price;
+//    }
+//
+//    public void setPrice(Integer price) {
+//        this.price = price;
+//    }
+    
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
+    
 
     @Override
     public int hashCode() {
@@ -135,7 +187,7 @@ public class Furniture implements Serializable{
 
     @Override
     public String toString() {
-        return "Furniture{" + "id=" + id
+        return "Furniture{" 
                 + ", name=" + name
                 + ", color=" + color
                 + ", size=" + size
@@ -165,7 +217,9 @@ public class Furniture implements Serializable{
     }
 
     
+}
+    
 
     
     
-}
+

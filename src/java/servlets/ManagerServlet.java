@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,8 @@ import session.UserRolesFacade;
     "/createFurniture",
     "/editFurnitureForm",
     "/editFurniture",
+    "/editBuyerForm",
+    "/editBuyer",
 
 })
 public class ManagerServlet extends HttpServlet {
@@ -52,8 +55,8 @@ public class ManagerServlet extends HttpServlet {
     
     @EJB private UserRolesFacade userRolesFacade;
     
-    private Furniture furniture;
-    private String furnitureId;
+
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -71,26 +74,26 @@ public class ManagerServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if(session == null){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         User user = (User) session.getAttribute("user");
         if(user == null){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         boolean isRole = userRolesFacade.isRole("MANAGER", user);
         if(!isRole){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему с соответствующими правами");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         String path = request.getServletPath();
         
         switch (path) {
             case "/addFurniture":
-                request.getRequestDispatcher("/WEB-INF/addFurnitureForm.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("addFurniture")).forward(request, response);
                 break;
             case "/createFurniture":
                 String name = request.getParameter("name");
@@ -110,34 +113,37 @@ public class ManagerServlet extends HttpServlet {
                     request.setAttribute("quantity", quantity);
                     request.setAttribute("price", price);
                     request.setAttribute("info", "Заполните все поля.");
-                    request.getRequestDispatcher("/WEB-INF/addFurnitureForm.jsp").forward(request, response); 
+                    request.getRequestDispatcher("/addFurniture").forward(request, response);
                     break;
                 }
                 else if (Integer.parseInt(price) < 1) {
                     request.setAttribute("info","Цена не может быть меньше 1$!");          
-                    request.getRequestDispatcher("/WEB-INF/addFurnitureForm.jsp").forward(request, response);
+                    request.getRequestDispatcher("/addFurniture").forward(request, response);
                     break; 
                 }    
-                furniture = new Furniture(name, color, size, Integer.parseInt(quantity), Integer.parseInt(price));
+                Furniture furniture = new Furniture(name, color, size, Integer.parseInt(quantity), Integer.parseInt(price));
                 furnitureFacade.create(furniture);
                 request.setAttribute("info", "Товар\"" +furniture.getName()+ "\" был добавлен");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+                request.getRequestDispatcher("/addFurniture").forward(request, response);
                 break;
-            case "/editFurnitureForm":                  
-                furnitureId = request.getParameter("furnitureId");
-                furniture = furnitureFacade.find(Long.parseLong(furnitureId));
-                request.setAttribute("furniture", furniture);
-                request.getRequestDispatcher("/WEB-INF/editFurnitureForm.jsp").forward(request, response);
-                break;               
+            case "/editFurnitureForm":
+
+                String furnitureId = request.getParameter("furnitureId");
+//                furniture = furnitureFacade.find(Long.parseLong(furnitureId));
+//                request.setAttribute("furniture", furniture);
+                
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("editFurniture")).forward(request, response);
+                
+                break;
             case "/editFurniture":
                 furnitureId = request.getParameter("furnitureId");
                 furniture = furnitureFacade.find(Long.parseLong(furnitureId));
-                request.setAttribute("furniture", furniture);
                 name = request.getParameter("name");
                 color = request.getParameter("color");
                 size = request.getParameter("size");
                 quantity = request.getParameter("quantity");
                 price = request.getParameter("price");
+                
                 if("".equals(name) || name == null
                         || "".equals(color) || color == null
                         || "".equals(size) || size == null
@@ -149,12 +155,11 @@ public class ManagerServlet extends HttpServlet {
                     request.setAttribute("size",size);
                     request.setAttribute("quantity",quantity);
                     request.setAttribute("price",price);
-                    request.setAttribute("furniture", furniture.getId()); 
-                    request.getRequestDispatcher("/WEB-INF/editFurnitureForm.jsp").forward(request, response);
+                    request.getRequestDispatcher("/editFurnitureForm").forward(request, response);
                     break; 
                 } else if (Integer.parseInt(price) < 1) {
                     request.setAttribute("info","Цена не может быть меньше 1$!");          
-                    request.getRequestDispatcher("/WEB-INF/editFurnitureForm.jsp").forward(request, response);
+                    request.getRequestDispatcher("/editFurnitureForm").forward(request, response);
                     break;    
                 }   
                 furniture.setName(name);
@@ -165,8 +170,40 @@ public class ManagerServlet extends HttpServlet {
                 furnitureFacade.edit(furniture);
                 request.setAttribute("furnitureId", furniture.getId());
                 request.setAttribute("info","Товар успешно отредактирован: " + furniture.toString() );
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
-                break;     
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
+                break;                
+            case "/editBuyerForm":
+                String buyerId = request.getParameter("buyerId");
+                Buyer buyer = buyerFacade.find(Long.parseLong(buyerId));
+                request.setAttribute("buyer", buyer);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("editBuyer")).forward(request, response);
+                break;
+            case "/editBuyer":
+                buyerId = request.getParameter("buyerId");
+                String firstname = request.getParameter("firstname");
+                String lastname = request.getParameter("lastname");
+                String phone = request.getParameter("phone");
+                String wallet = request.getParameter("wallet");
+
+                if("".equals(firstname) || firstname == null
+                        || "".equals(lastname) || lastname == null
+                        || "".equals(phone) || phone == null
+                        || "".equals(wallet) || wallet == null){
+                    request.setAttribute("info", "Поля не должны быть пустыми");
+                    request.getRequestDispatcher("/editBuyerForm").forward(request, response);
+                    break;
+                }
+                
+                buyer = buyerFacade.find(Long.parseLong(buyerId));
+                buyer.setFirstname(firstname);
+                buyer.setLastname(lastname);
+                buyer.setPhone(phone);
+                buyer.setWallet(wallet);
+                buyerFacade.edit(buyer);
+                request.setAttribute("buyerId", buyer.getId());
+                request.setAttribute("info", "Данные покупателя отредактированы");
+                request.getRequestDispatcher("/editBuyerForm").forward(request, response);
+                break;
             
            
         }
@@ -211,4 +248,5 @@ public class ManagerServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    
 }

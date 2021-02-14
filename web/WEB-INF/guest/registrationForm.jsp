@@ -1,16 +1,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Зарегестрироваться</title>
-    </head>
-    <body>
-        <div>Зарегестрироваться</div>
-        <p>${info}</p>
-        <br>
-        <a href="index.jsp"><Магазин></a><br>
+
+        <h3>Зарегестрироваться</h3>
+
         <form action="registration" method="POST">
             Имя: <input type="text" name="firstname" value="${firstname}"><br>
             Фамилия: <input type="text" name="lastname" value="${lastname}"><br>
@@ -20,5 +12,4 @@
             Пароль: <input type="password" name="password" value=""><br>
             <input type="submit" name="submit" value="Зарегестрироваться">
         </form>
-    </body>
-</html>
+    

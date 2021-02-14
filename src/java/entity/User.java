@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
 
 /**
  *
- * @author Juri
+ * @author Comp
  */
 @Entity
 public class User implements Serializable{
@@ -58,11 +58,11 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    public Buyer getReader() {
+    public Buyer getBuyer() {
         return buyer;
     }
 
-    public void setReader(Buyer buyer) {
+    public void setBuyer(Buyer buyer) {
         this.buyer = buyer;
     }
 

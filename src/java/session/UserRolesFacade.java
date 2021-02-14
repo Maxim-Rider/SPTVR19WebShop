@@ -5,6 +5,9 @@
  */
 package session;
 
+import entity.Role;
+import java.util.ArrayList;
+import java.util.List;
 import entity.User;
 import entity.UserRoles;
 import javax.ejb.Stateless;
@@ -41,5 +44,29 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
             return false;
         }
     }
+    
+    public List<Role> getRolesForUser(User user) {
+        try {
+            return em.createQuery("SELECT ur.role FROM UserRoles ur WHERE ur.user = :user")
+                    .setParameter("user", user)
+                    .getResultList();
+        } catch (Exception e){
+            return new ArrayList<>();
+        }
+    }
 
+    public void setRoleToUser(Role r, User u) {
+        if(!this.isRole(r.getRoleName(), u)){
+            UserRoles ur = new UserRoles(u, r);
+            this.create(ur);
+        }
+    }
+    public void removeRoleFromUser(Role r, User u){
+        if(this.isRole(r.getRoleName(), u)){
+            em.createQuery("DELETE FROM UserRoles ur WHERE ur.user = :user AND ur.role = :role")
+                    .setParameter("user", u)
+                    .setParameter("role", r)
+                    .executeUpdate();
+        }
+    }
 }

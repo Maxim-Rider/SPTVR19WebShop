@@ -5,16 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Редактирование покупателя</title>
-    </head>
-    <body>
+
         <h1>Редактирование покупателя</h1>
-        <p>${info}</p>
-        <p><a href="index.jsp"><Магазин></a></p>
+
         <form action="editBuyer" method="POST">
             <input type="hidden" name="buyerId" value="${buyer.id}">
             Имя: <input type="text" name="firstname" value="${buyer.firstname}"><br>
@@ -23,5 +16,4 @@
             Кошелёк: <input type="text" name="wallet" value="${buyer.wallet}"><br>
             <input type="submit" name="submit" value="Изменить">
         </form>
-    </body>
-</html>
+    

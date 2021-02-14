@@ -8,8 +8,12 @@ package servlets;
 
 import entity.Buyer;
 import entity.User;
+import entity.Role;
+import entity.UserRoles;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -23,13 +27,18 @@ import session.HistoryFacade;
 import session.BuyerFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
+import session.RoleFacade;
+
 
 /**
  *
- * @author jvm
+ * @author Comp
  */
 @WebServlet(name = "AdminServlet", urlPatterns = {
     "/listBuyers",
+    "/adminPanel",
+    "/setRoleToUser",
+        
 
 })
 public class AdminServlet extends HttpServlet {
@@ -42,6 +51,7 @@ public class AdminServlet extends HttpServlet {
     @EJB
     private UserFacade userFacade;
     @EJB private UserRolesFacade userRolesFacade;
+    @EJB private RoleFacade roleFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -58,19 +68,19 @@ public class AdminServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if(session == null){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         User user = (User) session.getAttribute("user");
         if(user == null){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         boolean isRole = userRolesFacade.isRole("ADMIN", user);
         if(!isRole){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему с соответствующими правами");
-            request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
         String path = request.getServletPath();
@@ -79,7 +89,39 @@ public class AdminServlet extends HttpServlet {
             case "/listBuyers":
                 List<Buyer> listBuyers = buyerFacade.findAll();
                 request.setAttribute("listBuyers", listBuyers);
-                request.getRequestDispatcher("/WEB-INF/listBuyers.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("listBuyers")).forward(request, response);
+                break;
+            case "/adminPanel":
+                List<Role> listRoles = roleFacade.findAll();
+                request.setAttribute("listRoles", listRoles);
+                List<User> listUsers = userFacade.findAll();
+                Map<User,List<Role>> usersMap = new HashMap<>();
+                for(User u : listUsers){
+                    usersMap.put(u, userRolesFacade.getRolesForUser(u));
+                }
+                request.setAttribute("usersMap", usersMap);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("adminPanel")).forward(request, response);
+                break;
+            case "/setRoleToUser":
+                String roleId = request.getParameter("roleId");
+                String userId = request.getParameter("userId");
+                String delete = request.getParameter("delete");
+                if("".equals(roleId) || roleId == null
+                        || "".equals(userId) || userId == null){
+                    request.setAttribute("roleId", roleId);
+                    request.setAttribute("userId", userId);
+                    request.setAttribute("info", "Выберите все поля");
+                    request.getRequestDispatcher("/adminPanel").forward(request, response);
+                }
+                Role r = roleFacade.find(Long.parseLong(roleId));
+                User u = userFacade.find(Long.parseLong(userId));
+                if(delete == null){
+                    userRolesFacade.setRoleToUser(r,u);
+                }else{
+                    userRolesFacade.removeRoleFromUser(r,u);
+                }
+                request.setAttribute("info", "Роль назначена");
+                request.getRequestDispatcher("/adminPanel").forward(request, response);
                 break;
         }
     }

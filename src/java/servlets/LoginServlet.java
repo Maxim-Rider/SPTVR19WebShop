@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +29,7 @@ import session.UserRolesFacade;
  *
  * @author Comp
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {
+@WebServlet(name = "LoginServlet", loadOnStartup = 1, urlPatterns = {
     "/showLoginForm",
     "/login",
     "/logout",
@@ -53,6 +54,8 @@ public class LoginServlet extends HttpServlet {
     
     @EJB private RoleFacade roleFacade;
     @EJB private UserRolesFacade userRolesFacade;
+    
+    public static final ResourceBundle pathToJsp = ResourceBundle.getBundle("property.pathToJsp");
 
     @Override
     public void init() throws ServletException {
@@ -101,7 +104,7 @@ public class LoginServlet extends HttpServlet {
 
         switch (path) {
             case "/showLoginForm":
-                request.getRequestDispatcher("/WEB-INF/showLoginForm.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("login")).forward(request, response);
                 break;
             case "/login":
                 String login = request.getParameter("login");
@@ -120,7 +123,7 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = request.getSession(true);
                 session.setAttribute("user", user);
                 request.setAttribute("info", "Вы вошли! :)");
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
                 break;
             case "/logout":
                 session = request.getSession(false);
@@ -128,12 +131,12 @@ public class LoginServlet extends HttpServlet {
                     session.invalidate();
                 }
                 request.setAttribute("info", "Вы вышли! :)");
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
                 break;
                 
             
             case "/registrationForm":
-                request.getRequestDispatcher("/WEB-INF/registrationForm.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("registration")).forward(request, response);
                 break;
             case "/registration":
                 String firstname = request.getParameter("firstname");
@@ -165,12 +168,12 @@ public class LoginServlet extends HttpServlet {
                 UserRoles userRoles = new UserRoles(user, roleBuyer);
                 userRolesFacade.create(userRoles);
                 request.setAttribute("info", "Покупатель\"" +buyer.getFirstname()+" " +buyer.getLastname()+ "\" был зарегестрирован");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
                 break;
             case "/listFurnitures":
                 List<Furniture> listFurnitures = furnitureFacade.findAll();
                 request.setAttribute("listFurnitures", listFurnitures);
-                request.getRequestDispatcher("/WEB-INF/listFurnitures.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/guest/listFurnitures.jsp").forward(request, response);
                 break;
                 
             

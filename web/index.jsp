@@ -1,6 +1,6 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
     <head>
         <link type="text/css" rel="stylesheet" href="style.css">
@@ -24,4 +24,6 @@
         <a href="http://www.google.com/">Выход из программы</a><hr>
 
     </body>
-</html>
+</html>-->
+
+<p class="m-2 w-100 text-center">Добро пожаловать в Магазин Мягкой Мебели. Это учебный проект учащегося группы SPTVR19 Максима Колесникова.</p>

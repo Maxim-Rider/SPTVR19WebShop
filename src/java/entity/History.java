@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author Juri
+ * @author Comp
  */
 @Entity
 public class History implements Serializable{
@@ -40,6 +40,10 @@ public class History implements Serializable{
         this.buyer = buyer;
         this.takeOnDate = takeOnDate;
   
+    }
+
+    public History(Furniture furniture, User user, Date time) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

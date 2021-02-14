@@ -14,7 +14,7 @@ import javax.persistence.Id;
 
 /**
  *
- * @author Melnikov
+ * @author Comp
  */
 @Entity
 public class Buyer implements Serializable{
@@ -95,7 +95,7 @@ public class Buyer implements Serializable{
 
     @Override
     public String toString() {
-        return "Reader{" 
+        return "Buyer{" 
                 + "firstname=" + firstname 
                 + ", lastname=" + lastname 
                 + ", phone=" + phone
