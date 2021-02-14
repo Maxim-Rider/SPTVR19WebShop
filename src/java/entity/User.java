@@ -20,7 +20,7 @@ import javax.persistence.OneToOne;
  * @author Comp
  */
 @Entity
-public class User implements Serializable{
+public class User implements Serializable, EntityInterface{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

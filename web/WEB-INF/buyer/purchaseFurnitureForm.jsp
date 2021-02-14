@@ -17,6 +17,22 @@
         <br><br>
         
         <input type="submit" name="submit" value="Купить товар">
+        <p>
+            <c:forEach var="book" items="${listBoughtFurnitures}">
+                <!--список взятых пользователем книг-->
+                  <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">${furniture.name}</h5>
+                      <p class="card-text">${furniture.color}</p>
+                      <p class="card-text">${furniture.size}</p>
+                      <p class="card-text">${furniture.quantity}</p>
+                      <p class="card-text">${furniture.price}</p>
+                      <a href="#" class="btn btn-primary">Просмотреть товар</a>
+                    </div>
+                  </div>
+            </c:forEach>
+        </p>
         </form>
 
  

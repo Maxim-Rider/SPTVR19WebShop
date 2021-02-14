@@ -11,13 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author Comp
  */
 @Entity
-public class Furniture implements Serializable{
+public class Furniture implements Serializable, EntityInterface{
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,32 +27,36 @@ public class Furniture implements Serializable{
     private String size;
     private Integer quantity;
     private Integer price;
-    
+    @OneToOne
+    private Cover cover;
     
 
     public Furniture() {
     }
 
-    public Furniture(String name, String color, String size, Integer quantity, Integer price) {
+    public Furniture(String name, String color, String size, Integer quantity, Integer price, Cover cover) {
         this.name = name;
         this.color = color;
         this.size = size;
         this.quantity = quantity;
         this.price = price;
+        this.cover = cover;
     }
-    public Furniture(String name, String color, String size, String quantity, String price) {
+    public Furniture(String name, String color, String size, String quantity, String price, Cover cover) {
         this.name = name;
         this.color = color;
         this.size = size;
         this.setQuantity(quantity);
         this.setPrice(price);
+        this.cover = cover;
     }
-    public Furniture(String name, String color, String size, Double quantity, Double price) {
+    public Furniture(String name, String color, String size, Double quantity, Double price, Cover cover) {
         this.name = name;
         this.color = color;
         this.size = size;
         this.setQuantity(quantity);
         this.setPrice(price);
+        this.cover = cover;
     }
     public String getPriceToStr(){
         double dPrice = this.price/100;
@@ -78,14 +83,8 @@ public class Furniture implements Serializable{
     private void setQuantity(Double quantity) {
         this.quantity = (int)(price*100);
     }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
+//
+  
 
     
 
@@ -121,23 +120,23 @@ public class Furniture implements Serializable{
         this.size = size;
     }
 
-//    public Integer getQuantity() {
-//        return quantity;
-//    }
-//
-//    public void setQuantity(Integer quantity) {
-//        this.quantity = quantity;
-//    }
-//
-//    public Integer getPrice() {
-//        return price;
-//    }
-//
-//    public void setPrice(Integer price) {
-//        this.price = price;
-//    }
-    
+    public Integer getQuantity() {
+        return quantity;
+    }
 
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+ 
+    
+    public Cover getCover() {
+        return cover;
+    }
+
+    public void setCover(Cover cover) {
+        this.cover = cover;
+    }
     
 
     @Override
@@ -149,6 +148,7 @@ public class Furniture implements Serializable{
         hash = 41 * hash + Objects.hashCode(this.size);
         hash = 41 * hash + Objects.hashCode(this.quantity);
         hash = 41 * hash + Objects.hashCode(this.price);
+        hash = 41 * hash + Objects.hashCode(this.cover);
         return hash;
     }
 
@@ -180,6 +180,9 @@ public class Furniture implements Serializable{
             return false;
         }
         if (!Objects.equals(this.price, other.price)) {
+            return false;
+        }
+        if (!Objects.equals(this.cover, other.cover)) {
             return false;
         }
         return true;

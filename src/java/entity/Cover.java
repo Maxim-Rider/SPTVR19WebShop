@@ -11,31 +11,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
 /**
  *
  * @author Comp
  */
-
 @Entity
-public class UserRoles implements Serializable{
-
-    private static final long serialVersionUID = 1L;
+public class Cover implements Serializable, EntityInterface{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
-    private User user;
-    @OneToOne
-    private Role role;
+    private String description;
+    private String path;
 
-    public UserRoles(User user, Role role) {
-        this.user = user;
-        this.role = role;
+    public Cover() {
     }
 
-    public UserRoles() {
+    public Cover(String description, String path) {
+        this.description = description;
+        this.path = path;
     }
 
     public Long getId() {
@@ -46,28 +39,28 @@ public class UserRoles implements Serializable{
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Role getRole() {
-        return role;
+    public String getPath() {
+        return path;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
-        hash = 23 * hash + Objects.hashCode(this.user);
-        hash = 23 * hash + Objects.hashCode(this.role);
+        hash = 37 * hash + Objects.hashCode(this.id);
+        hash = 37 * hash + Objects.hashCode(this.description);
+        hash = 37 * hash + Objects.hashCode(this.path);
         return hash;
     }
 
@@ -82,14 +75,14 @@ public class UserRoles implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final UserRoles other = (UserRoles) obj;
+        final Cover other = (Cover) obj;
+        if (!Objects.equals(this.description, other.description)) {
+            return false;
+        }
+        if (!Objects.equals(this.path, other.path)) {
+            return false;
+        }
         if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.user, other.user)) {
-            return false;
-        }
-        if (!Objects.equals(this.role, other.role)) {
             return false;
         }
         return true;
@@ -97,11 +90,7 @@ public class UserRoles implements Serializable{
 
     @Override
     public String toString() {
-        return "UserRoles{" 
-                + "id=" + id 
-                + ", user=" + user.getLogin()
-                + ", role=" + role.getRoleName()
-                + '}';
+        return "Cover{" + "id=" + id + ", description=" + description + ", path=" + path + '}';
     }
 
 

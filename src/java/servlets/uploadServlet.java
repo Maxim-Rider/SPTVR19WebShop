@@ -5,62 +5,39 @@
  */
 package servlets;
 
-
-import entity.Buyer;
-import entity.Furniture;
-import entity.History;
-
+import entity.Cover;
 import entity.User;
+import java.io.File;
 import java.io.IOException;
-import java.util.GregorianCalendar;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import session.BuyerFacade;
-import session.FurnitureFacade;
-import session.HistoryFacade;
-import session.UserFacade;
+import javax.servlet.http.Part;
+import session.CoverFacade;
 import session.UserRolesFacade;
 
 /**
  *
  * @author Comp
  */
-@WebServlet(name = "UserServlet", urlPatterns = {
-
-    "/purchaseFurnitureForm",
-    "/purchaseFurniture",
-    
+@WebServlet(name = "uploadServlet", urlPatterns = {
+    "/uploadCover",
 })
-public class UserServlet extends HttpServlet {
-    @EJB
-    private HistoryFacade historyFacade;
-    
-    @EJB
-    private UserFacade userFacade;
-
-    @EJB
-    private FurnitureFacade furnitureFacade;
-
-    @EJB
-    private BuyerFacade buyerFacade;
-    
+@MultipartConfig
+public class uploadServlet extends HttpServlet {
     @EJB private UserRolesFacade userRolesFacade;
-    
-    private List<Furniture> listFurnitures;
-    private List<Buyer> listBuyers;
-    private Buyer buyer;
-    private Furniture furniture;
-    private History history;
-    private Object listBoughtFurniture;
-
-
-
+    @EJB private CoverFacade coverFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -86,54 +63,44 @@ public class UserServlet extends HttpServlet {
             request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
-        
-        boolean isRole = userRolesFacade.isRole("BUYER", user);
+        boolean isRole = userRolesFacade.isRole("MANAGER", user);
         if(!isRole){
             request.setAttribute("info", "У вас нет права для этого ресурса. Войдите в систему с соответствующими правами");
             request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
-        
-        String path = request.getServletPath();
-
-        switch (path) {
-            case "/purchaseFurnitureForm":
-                listFurnitures = furnitureFacade.findAll();
-                request.setAttribute("listFurnitures", listFurnitures);
-                listBuyers = buyerFacade.findAll();
-                request.setAttribute("listBuyers", listBuyers);
-                List<Furniture> listBoughtFurnitures = historyFacade.findBoughtFurniture(user.getBuyer());
-                request.setAttribute("listBoughtFurnitures", listBoughtFurnitures);
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("purchaseFurniture")).forward(request, response);
-                break;
-            case "/purchaseFurniture":
-                String furnitureId = request.getParameter("furnitureId");
-                Furniture furniture = furnitureFacade.find(Long.parseLong(furnitureId));
-//                String buyerId = request.getParameter("buyerId");
-//                Buyer buyer = buyerFacade.find(Long.parseLong(buyerId));
-                Buyer buyer = user.getBuyer();
-                if (!(furniture.getQuantity()-1>=0)) {
-                    request.setAttribute("info", "Нет товара");
-                    request.getRequestDispatcher("/index.jsp").forward(request, response);
-                    break;
-                } 
-                if (!(buyer.getWallet() >= furniture.getPrice())) {
-                    request.setAttribute("info", "Недостаточно денег для покупки");
-                    request.getRequestDispatcher("/index.jsp").forward(request, response);
-                    break;
-                }
-                buyer.setWallet(buyer.getWallet() - furniture.getPrice());
-                   
-                buyerFacade.edit(buyer);
-                furniture.setQuantity(furniture.getQuantity() - 1);
-                furnitureFacade.edit(furniture);
-                History history = new History(furniture, buyer, new GregorianCalendar().getTime());
-                historyFacade.create(history);
-
-                request.setAttribute("info", "Товар '" + furniture.getName() + "' успешно куплен покупателем " + buyer.getFirstname() + " " + buyer.getLastname() + "!");
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
-                break;
+       String uploadFolder = "E:\\UploadFolder";
+       List<Part> fileParts = request
+               .getParts()
+               .stream()
+               .filter(part -> "file".equals(part.getName()))
+               .collect(Collectors.toList());
+       StringBuffer sb = new StringBuffer();
+       for(Part filePart : fileParts){
+           sb.append(uploadFolder+File.separator+getFileName(filePart));
+           File file = new File(sb.toString());
+           try(InputStream fileContent = filePart.getInputStream()){
+               Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+           }
+       }
+       String description = request.getParameter("description");
+       Cover cover = new Cover(description, sb.toString());
+       coverFacade.create(cover);
+       request.setAttribute("cover", cover);
+       request.setAttribute("info", "Файл загружен");
+       request.getRequestDispatcher("/addFurniture").forward(request, response);
+    }
+    private String getFileName(Part part){
+        final String partHeader = part.getHeader("content-disposition");
+        for (String content : part.getHeader("content-disposition").split(";")){
+            if(content.trim().startsWith("filename")){
+                return content
+                        .substring(content.indexOf('=')+1)
+                        .trim()
+                        .replace("\"",""); 
+            }
         }
+        return null;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

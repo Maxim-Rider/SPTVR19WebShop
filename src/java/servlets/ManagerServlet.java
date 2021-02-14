@@ -9,6 +9,7 @@ package servlets;
 import entity.Buyer;
 import entity.Furniture;
 import entity.User;
+import entity.Cover;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -25,6 +26,7 @@ import session.FurnitureFacade;
 import session.HistoryFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
+import session.CoverFacade;
 
 /**
  *
@@ -37,7 +39,7 @@ import session.UserRolesFacade;
     "/editFurniture",
     "/editBuyerForm",
     "/editBuyer",
-
+    "/uploadForm",
 })
 public class ManagerServlet extends HttpServlet {
 
@@ -54,7 +56,7 @@ public class ManagerServlet extends HttpServlet {
     private BuyerFacade buyerFacade;
     
     @EJB private UserRolesFacade userRolesFacade;
-    
+    @EJB private CoverFacade coverFacade;
 
 
 
@@ -101,17 +103,19 @@ public class ManagerServlet extends HttpServlet {
                 String size = request.getParameter("size");
                 String quantity = request.getParameter("quantity");
                 String price = request.getParameter("price");
-               
+                String coverId = request.getParameter("coverId");
                 if ("".equals(name) || name == null
                         || "".equals(color) || color == null
                         || "".equals(size) || size == null
                         || "".equals(quantity) || quantity == null
-                        || "".equals(price) || price == null){
+                        || "".equals(price) || price == null
+                        || "".equals(coverId) || coverId == null){
                     request.setAttribute("name", name);
                     request.setAttribute("color", color);
                     request.setAttribute("size", size);
                     request.setAttribute("quantity", quantity);
                     request.setAttribute("price", price);
+                    request.setAttribute("coverId",coverId);
                     request.setAttribute("info", "Заполните все поля.");
                     request.getRequestDispatcher("/addFurniture").forward(request, response);
                     break;
@@ -120,8 +124,9 @@ public class ManagerServlet extends HttpServlet {
                     request.setAttribute("info","Цена не может быть меньше 1$!");          
                     request.getRequestDispatcher("/addFurniture").forward(request, response);
                     break; 
-                }    
-                Furniture furniture = new Furniture(name, color, size, Integer.parseInt(quantity), Integer.parseInt(price));
+                }
+                Cover cover = coverFacade.find(Long.parseLong(coverId));
+                Furniture furniture = new Furniture(name, color, size, Integer.parseInt(quantity), Integer.parseInt(price), cover);
                 furnitureFacade.create(furniture);
                 request.setAttribute("info", "Товар\"" +furniture.getName()+ "\" был добавлен");
                 request.getRequestDispatcher("/addFurniture").forward(request, response);
@@ -143,18 +148,20 @@ public class ManagerServlet extends HttpServlet {
                 size = request.getParameter("size");
                 quantity = request.getParameter("quantity");
                 price = request.getParameter("price");
-                
+                coverId = request.getParameter("coverId");
                 if("".equals(name) || name == null
                         || "".equals(color) || color == null
                         || "".equals(size) || size == null
                         || "".equals(quantity) || quantity == null
-                        || "".equals(price) || price == null){
+                        || "".equals(price) || price == null
+                        || "".equals(coverId) || coverId == null){
                     request.setAttribute("info","Заполните все поля формы");
                     request.setAttribute("name",name);
                     request.setAttribute("color",color);
                     request.setAttribute("size",size);
                     request.setAttribute("quantity",quantity);
                     request.setAttribute("price",price);
+                    request.setAttribute("coverId",coverId);
                     request.getRequestDispatcher("/editFurnitureForm").forward(request, response);
                     break; 
                 } else if (Integer.parseInt(price) < 1) {
@@ -204,7 +211,10 @@ public class ManagerServlet extends HttpServlet {
                 request.setAttribute("info", "Данные покупателя отредактированы");
                 request.getRequestDispatcher("/editBuyerForm").forward(request, response);
                 break;
-            
+            case "/uploadForm":
+                    
+                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("upload")).forward(request, response);
+                break;
            
         }
     }
