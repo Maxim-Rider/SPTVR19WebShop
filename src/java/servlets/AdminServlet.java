@@ -105,7 +105,7 @@ public class AdminServlet extends HttpServlet {
             case "/setRoleToUser":
                 String roleId = request.getParameter("roleId");
                 String userId = request.getParameter("userId");
-                String delete = request.getParameter("delete");
+                String changeRole = request.getParameter("changeRole");
                 if("".equals(roleId) || roleId == null
                         || "".equals(userId) || userId == null){
                     request.setAttribute("roleId", roleId);
@@ -115,9 +115,9 @@ public class AdminServlet extends HttpServlet {
                 }
                 Role r = roleFacade.find(Long.parseLong(roleId));
                 User u = userFacade.find(Long.parseLong(userId));
-                if(delete == null){
+                if("0".equals(changeRole)){
                     userRolesFacade.setRoleToUser(r,u);
-                }else{
+                }else if("1".equals(changeRole)){
                     userRolesFacade.removeRoleFromUser(r,u);
                 }
                 request.setAttribute("info", "Роль назначена");

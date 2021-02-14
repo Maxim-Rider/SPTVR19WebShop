@@ -43,15 +43,20 @@
                 </select>
             </div>
         </div>
-        <div class="row">
-            <div class="col m-2 text-center">
-                <div class="form-check">
-                    <input class="form-check-input" name="delete" type="checkbox" value="1" id="flexCheckDefault">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      Удалить роль
-                    </label>
-                  </div>
-
+        <div class="row w-100">
+            <div class="col text-end">
+                <input class="form-check-input" name="changeRole" type="radio" value="0" checked>
+            </div>
+            <div class="col  text-start">
+                Добавить роль
+            </div>
+        </div>
+        <div class="row w-100">
+            <div class="col text-end">
+                <input class="form-check-input" name="changeRole" type="radio" value="1">
+            </div>
+            <div class="col  text-start">
+                Удалить роль
             </div>
         </div>
         <div class="row">
