@@ -11,5 +11,5 @@
     <body>
         <div class="container">
             <c:import url="/WEB-INF/menu/menu.jsp"></c:import>
-            <H1 class="w-100 text-center">Магазин мягкой мебели</H1>
-            <p class="w-100 text-center mb-5">${info}</p>
+            <p class="w-100 text-center mb-5">${info}&nbsp;</p>
+

@@ -104,6 +104,7 @@ public class LoginServlet extends HttpServlet {
 
         switch (path) {
             case "/showLoginForm":
+                request.setAttribute("activeShowLoginForm", "true");
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("login")).forward(request, response);
                 break;
             case "/login":
@@ -136,6 +137,7 @@ public class LoginServlet extends HttpServlet {
                 
             
             case "/registrationForm":
+                request.setAttribute("activeRegistrationForm", "true");
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("registration")).forward(request, response);
                 break;
             case "/registration":
@@ -171,6 +173,7 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
                 break;
             case "/listFurnitures":
+                request.setAttribute("activeListFurnitures", "true");
                 List<Furniture> listFurnitures = furnitureFacade.findAll();
                 request.setAttribute("listFurnitures", listFurnitures);
                 request.getRequestDispatcher("/WEB-INF/guest/listFurnitures.jsp").forward(request, response);

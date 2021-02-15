@@ -95,6 +95,9 @@ public class ManagerServlet extends HttpServlet {
         
         switch (path) {
             case "/addFurniture":
+                request.setAttribute("activeAddFurniture", "true");
+                List<Cover> listCovers = coverFacade.findAll();
+                request.setAttribute("listCovers", listCovers);
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("addFurniture")).forward(request, response);
                 break;
             case "/createFurniture":
@@ -132,13 +135,11 @@ public class ManagerServlet extends HttpServlet {
                 request.getRequestDispatcher("/addFurniture").forward(request, response);
                 break;
             case "/editFurnitureForm":
-
+                request.setAttribute("activeEditFurnitureForm", "true");
                 String furnitureId = request.getParameter("furnitureId");
-//                furniture = furnitureFacade.find(Long.parseLong(furnitureId));
-//                request.setAttribute("furniture", furniture);
-                
+                furniture = furnitureFacade.find(Long.parseLong(furnitureId));
+                request.setAttribute("furniture", furniture);
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("editFurniture")).forward(request, response);
-                
                 break;
             case "/editFurniture":
                 furnitureId = request.getParameter("furnitureId");
@@ -162,6 +163,7 @@ public class ManagerServlet extends HttpServlet {
                     request.setAttribute("quantity",quantity);
                     request.setAttribute("price",price);
                     request.setAttribute("coverId",coverId);
+                    request.setAttribute("furnitureId", furniture.getId());
                     request.getRequestDispatcher("/editFurnitureForm").forward(request, response);
                     break; 
                 } else if (Integer.parseInt(price) < 1) {
@@ -180,6 +182,7 @@ public class ManagerServlet extends HttpServlet {
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
                 break;                
             case "/editBuyerForm":
+                request.setAttribute("activeEditBuyerForm", "true");
                 String buyerId = request.getParameter("buyerId");
                 Buyer buyer = buyerFacade.find(Long.parseLong(buyerId));
                 request.setAttribute("buyer", buyer);

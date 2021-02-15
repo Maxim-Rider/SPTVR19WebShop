@@ -98,6 +98,7 @@ public class UserServlet extends HttpServlet {
 
         switch (path) {
             case "/purchaseFurnitureForm":
+                request.setAttribute("activePurchaseFurnitureForm", "true");
                 listFurnitures = furnitureFacade.findAll();
                 request.setAttribute("listFurnitures", listFurnitures);
                 listBuyers = buyerFacade.findAll();
@@ -107,11 +108,12 @@ public class UserServlet extends HttpServlet {
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("purchaseFurniture")).forward(request, response);
                 break;
             case "/purchaseFurniture":
+                Buyer buyer = user.getBuyer();
                 String furnitureId = request.getParameter("furnitureId");
                 Furniture furniture = furnitureFacade.find(Long.parseLong(furnitureId));
 //                String buyerId = request.getParameter("buyerId");
 //                Buyer buyer = buyerFacade.find(Long.parseLong(buyerId));
-                Buyer buyer = user.getBuyer();
+                
                 if (!(furniture.getQuantity()-1>=0)) {
                     request.setAttribute("info", "Нет товара");
                     request.getRequestDispatcher("/index.jsp").forward(request, response);
