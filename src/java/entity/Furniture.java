@@ -7,7 +7,10 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,38 +29,67 @@ public class Furniture implements Serializable, EntityInterface{
     private String color;
     private String size;
     private Integer quantity;
-    private Integer price;
     @OneToOne
     private Cover cover;
-    
+    @Basic(fetch = FetchType.LAZY)
+    private String text;
+    private Integer price;
 
     public Furniture() {
     }
 
-    public Furniture(String name, String color, String size, Integer quantity, Integer price, Cover cover) {
+    public Furniture(String name, String color, String size, Integer quantity, String text, Integer price, Cover cover) {
         this.name = name;
         this.color = color;
         this.size = size;
         this.quantity = quantity;
+        this.text = text;
         this.price = price;
         this.cover = cover;
     }
-    public Furniture(String name, String color, String size, String quantity, String price, Cover cover) {
+    public Furniture(String name, String color, String size, String quantity, String text, String price, Cover cover) {
         this.name = name;
         this.color = color;
         this.size = size;
+        this.text = text;
         this.setQuantity(quantity);
         this.setPrice(price);
         this.cover = cover;
     }
-    public Furniture(String name, String color, String size, Double quantity, Double price, Cover cover) {
+    public Furniture(String name, String color, String size, Double quantity, String text, Double price, Cover cover) {
         this.name = name;
         this.color = color;
         this.size = size;
+        this.text = text;
         this.setQuantity(quantity);
         this.setPrice(price);
         this.cover = cover;
     }
+    
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+   
+    
+    
+    
+    public void setPrice(String price) {
+       if(price.matches(",")){
+           price = price.replaceAll(",", ".");
+       }
+        try {
+            Double d = Double.parseDouble(price);
+            this.price = (int)(d * 100);
+        } catch (Exception e) {
+            throw new NumberFormatException(price);
+        }
+
+    }
+    
     public String getPriceToStr(){
         double dPrice = this.price/100;
         return String.format("%.2f", dPrice);
@@ -65,6 +97,15 @@ public class Furniture implements Serializable, EntityInterface{
 
     private void setPrice(Double price) {
         this.price = (int)(price*100);
+    }
+    
+    public String getQuantityToStr(){
+        double dQuantity = this.quantity/100;
+        return String.format("%.2f", dQuantity);
+    }
+
+    private void setQuantity(Double quantity) {
+        this.quantity = (int)(quantity*100);
     }
 
     public Integer getPrice() {
@@ -75,15 +116,9 @@ public class Furniture implements Serializable, EntityInterface{
         this.price = price;
     }
     
-    public String getQuantityToStr(){
-        double dQuantity = this.quantity/100;
-        return String.format("%.2f", dQuantity);
-    }
-
-    private void setQuantity(Double quantity) {
-        this.quantity = (int)(price*100);
-    }
-//
+   
+    
+    
   
 
     
@@ -209,15 +244,15 @@ public class Furniture implements Serializable, EntityInterface{
         }
     }
 
-    public void setPrice(String price) {
-        try {
-            int priceInt = Integer.parseInt(price);
-            this.price = priceInt;
-            System.out.println("Строка "+price+" успешно преобразована в число.");
-        } catch (Exception e) {
-            System.out.println("Введены не цифры. Поле не изменено");
-        }
-    }
+//    public void setPrice(String price) {
+//        try {
+//            int priceInt = Integer.parseInt(price);
+//            this.price = priceInt;
+//            System.out.println("Строка "+price+" успешно преобразована в число.");
+//        } catch (Exception e) {
+//            System.out.println("Введены не цифры. Поле не изменено");
+//        }
+//    }
 
     
 }

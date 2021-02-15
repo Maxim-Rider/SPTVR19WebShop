@@ -105,6 +105,7 @@ public class ManagerServlet extends HttpServlet {
                 String color = request.getParameter("color");
                 String size = request.getParameter("size");
                 String quantity = request.getParameter("quantity");
+                String text = request.getParameter("text");
                 String price = request.getParameter("price");
                 String coverId = request.getParameter("coverId");
                 if ("".equals(name) || name == null
@@ -112,11 +113,13 @@ public class ManagerServlet extends HttpServlet {
                         || "".equals(size) || size == null
                         || "".equals(quantity) || quantity == null
                         || "".equals(price) || price == null
+                        || "".equals(text) || text == null
                         || "".equals(coverId) || coverId == null){
                     request.setAttribute("name", name);
                     request.setAttribute("color", color);
                     request.setAttribute("size", size);
                     request.setAttribute("quantity", quantity);
+                    request.setAttribute("text",text);
                     request.setAttribute("price", price);
                     request.setAttribute("coverId",coverId);
                     request.setAttribute("info", "Заполните все поля.");
@@ -129,7 +132,21 @@ public class ManagerServlet extends HttpServlet {
                     break; 
                 }
                 Cover cover = coverFacade.find(Long.parseLong(coverId));
-                Furniture furniture = new Furniture(name, color, size, Integer.parseInt(quantity), Integer.parseInt(price), cover);
+                Furniture furniture = null;
+                try {
+                    furniture = new Furniture(name, color, size, Integer.parseInt(quantity), text, Integer.parseInt(price), cover);
+                } catch (NumberFormatException e) {
+                    request.setAttribute("info","Неправильный формат цены: " + price );
+                    request.setAttribute("name", name);
+                    request.setAttribute("color", color);
+                    request.setAttribute("size", size);
+                    request.setAttribute("quantity", quantity);
+                    request.setAttribute("text",text);
+                    request.setAttribute("price", price);
+                    request.setAttribute("coverId",coverId);
+                    request.getRequestDispatcher("/addFurniture").forward(request, response);
+                    break;  
+                }
                 furnitureFacade.create(furniture);
                 request.setAttribute("info", "Товар\"" +furniture.getName()+ "\" был добавлен");
                 request.getRequestDispatcher("/addFurniture").forward(request, response);

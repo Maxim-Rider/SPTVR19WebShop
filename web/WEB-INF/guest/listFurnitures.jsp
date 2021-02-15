@@ -12,10 +12,10 @@
                     <img src="insertFile/${furniture.cover.path}"  class="card-img-top" alt="..." style="max-width: 12rem; max-height: 15rem">
                         <div class="card-body">
                             <h5 class="card-title">${furniture.name}</h5>
-                                <p class="card-text">${furniture.color}</p>
-                                <p class="card-text">${furniture.size} </p>
-                                <p class="card-text">${furniture.quantity} </p>
-                                <p class="card-text">${furniture.price}$ </p>
+                                Цвет: <p class="card-text">${furniture.color}</p>
+                                Размер: <p class="card-text">${furniture.size} </p>
+                                Количество: <p class="card-text">${furniture.quantity} </p>
+                                Цена: <p class="card-text">${furniture.price}$ </p>
                                 <a href="#" class="btn btn-primary">Просмотреть</a>
                                 <a href="#" class="btn btn-primary">Купить</a>
                         </div>

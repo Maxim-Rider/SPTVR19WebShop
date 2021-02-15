@@ -29,8 +29,12 @@
                       <input type="text" class="form-control" id="quantity" name="quantity" value="${quantity}">
                     </div>
                   </div>
+                  <div class="form-floating">
+                    <textarea class="form-control" placeholder="text" name="text" id="text"></textarea>
+                    <label for="text">Текст товара</label>
+                  </div>
                   <div class="mb-3 row">
-                    <label for="price" class="col-sm-3 col-form-label">Цена товара:</label>
+                    <label for="price" class="col-sm-3 col-form-label">Цена:</label>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" id="price" name="price" value="${price}">
                     </div>

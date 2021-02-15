@@ -2,6 +2,7 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ * asadmin set configs.config.server-config.network-config.protocols.protocol.http-listener-1.http.max-form-post-size-bytes=-1
  */
 package servlets;
 
@@ -110,6 +111,11 @@ public class UserServlet extends HttpServlet {
             case "/purchaseFurniture":
                 Buyer buyer = user.getBuyer();
                 String furnitureId = request.getParameter("furnitureId");
+                if(furnitureId == null || "".equals(furnitureId)){
+                    request.setAttribute("info","Выберите товар");
+                    request.getRequestDispatcher("/purchaseFurnitureForm").forward(request, response);
+                    break;
+                }
                 Furniture furniture = furnitureFacade.find(Long.parseLong(furnitureId));
 //                String buyerId = request.getParameter("buyerId");
 //                Buyer buyer = buyerFacade.find(Long.parseLong(buyerId));
@@ -131,9 +137,8 @@ public class UserServlet extends HttpServlet {
                 furnitureFacade.edit(furniture);
                 History history = new History(furniture, buyer, new GregorianCalendar().getTime());
                 historyFacade.create(history);
-
                 request.setAttribute("info", "Товар '" + furniture.getName() + "' успешно куплен покупателем " + buyer.getFirstname() + " " + buyer.getLastname() + "!");
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
+                request.getRequestDispatcher("/purchaseFurnitureForm").forward(request, response);
                 break;
         }
     }
