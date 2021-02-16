@@ -42,9 +42,7 @@ public class History implements Serializable, EntityInterface{
   
     }
 
-    public History(Furniture furniture, User user, Date time) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
 
 

@@ -138,10 +138,10 @@ public class UserServlet extends HttpServlet {
                 History history = new History(furniture, buyer, new GregorianCalendar().getTime());
                 historyFacade.create(history);
                 request.setAttribute("info", "Товар '" + furniture.getName() + "' успешно куплен покупателем " + buyer.getFirstname() + " " + buyer.getLastname() + "!");
-                request.getRequestDispatcher("/purchaseFurnitureForm").forward(request, response);
+                request.getRequestDispatcher("/listFurnitures").forward(request, response);
                 break;
         }
-    }
+        }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

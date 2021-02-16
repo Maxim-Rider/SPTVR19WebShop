@@ -3,7 +3,7 @@
 
 <h3 class="w-100 text-center  my-5">Добавить товар</h3>
         <div class="" style="width: 50rem; margin: 0 auto">
-            <a class="btn btn-primary my-2" href="uploadForm">Загрузить обложку книги</a>
+            <a class="btn btn-primary my-2" href="uploadForm">Загрузить обложку товара</a>
             <form action="createFurniture" method="POST">
                   <div class="mb-3 row">
                     <label for="name" class="col-sm-3 col-form-label">Название товара:</label>
@@ -32,7 +32,7 @@
                   <div class="form-floating">
                     <textarea class="form-control" placeholder="text" name="text" id="text"></textarea>
                     <label for="text">Текст товара</label>
-                  </div>
+                  </div><br>
                   <div class="mb-3 row">
                     <label for="price" class="col-sm-3 col-form-label">Цена:</label>
                     <div class="col-sm-9">

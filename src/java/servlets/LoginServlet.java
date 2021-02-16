@@ -178,6 +178,13 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("listFurnitures", listFurnitures);
                 request.getRequestDispatcher("/WEB-INF/guest/listFurnitures.jsp").forward(request, response);
                 break;
+//            case "/descriptionForm":
+//                List<History> listBoughtFurnitures = historyFacade.findAll();
+//                request.setAttribute("listBoughtFurnitures", listBoughtFurnitures);
+//                request.getRequestDispatcher("").forward(request, response);
+//            case "/description":
+                
+                
                 
             
             

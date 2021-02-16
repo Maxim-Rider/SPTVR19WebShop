@@ -45,7 +45,7 @@ public class HistoryFacade extends AbstractFacade<History> {
     
     public List<Furniture> findBoughtFurniture(Buyer buyer) {
         try {
-            List<Furniture> listBoughtFurniture = em.createQuery("SELECT h.furniture FROM History h WHERE h.buyer = :buyer AND h.returnDate=null")
+            List<Furniture> listBoughtFurniture = em.createQuery("SELECT h.furniture FROM History h WHERE h.buyer = :buyer")
                     .setParameter("buyer", buyer)
                     .getResultList();
             return listBoughtFurniture;

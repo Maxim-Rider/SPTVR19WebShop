@@ -28,7 +28,5 @@ public class FurnitureFacade extends AbstractFacade<Furniture> {
     public FurnitureFacade() {
         super(Furniture.class);
     }
-    public void edit(Furniture furniture) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 }

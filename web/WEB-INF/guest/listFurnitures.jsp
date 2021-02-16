@@ -16,8 +16,8 @@
                                 Размер: <p class="card-text">${furniture.size} </p>
                                 Количество: <p class="card-text">${furniture.quantity} </p>
                                 Цена: <p class="card-text">${furniture.price}$ </p>
-                                <a href="#" class="btn btn-primary">Просмотреть</a>
-                                <a href="#" class="btn btn-primary">Купить</a>
+                                Описание: <p class="card-text">${furniture.text} </p>
+                                <a href="purchaseFurniture?furnitureId=${furniture.id}" class="btn btn-primary">Купить</a>
                         </div>
                 </div>
             </c:forEach>
