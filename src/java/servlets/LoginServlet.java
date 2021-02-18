@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
         super.init();
         if(userFacade.findAll().size() > 0) return;
         //Создаем суппер администратора
-        Buyer buyer = new Buyer("Max", "Kolesnikov", "58007334", "500");
+        Buyer buyer = new Buyer("Max", "Kolesnikov", "58007334", "99999");
         buyerFacade.create(buyer);
         User user = new User("admin", "12345", buyer);
         userFacade.create(user);
