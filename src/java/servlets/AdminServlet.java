@@ -83,6 +83,13 @@ public class AdminServlet extends HttpServlet {
             request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
+        if(userRolesFacade.isRole("ADMIN",user)){
+            request.setAttribute("role", "ADMIN");
+        }else if(userRolesFacade.isRole("MANAGER",user)){
+            request.setAttribute("role", "MANAGER");
+        }else if(userRolesFacade.isRole("BUYER",user)){
+            request.setAttribute("role", "BUYER");
+        }
         String path = request.getServletPath();
 
         switch (path) {
@@ -120,15 +127,15 @@ public class AdminServlet extends HttpServlet {
                 if("0".equals(changeRole)){
                     userRolesFacade.setRoleToUser(r,u);
                     request.setAttribute("info", "Роль изменена");
+                }else if("1".equals(changeRole)){
+                    userRolesFacade.removeRoleFromUser(r,u);
+                    request.setAttribute("info", "Роль удалена");
                 }else {
                     request.setAttribute("userId", userId);
                     request.setAttribute("roleId", roleId);
                     request.setAttribute("info", "Изменить роль невозможно");
                 }
-//                }else if("1".equals(changeRole)){
-//                    userRolesFacade.removeRoleFromUser(r,u);
-                
-//                request.setAttribute("info", "Роль назначена");
+ 
                 request.getRequestDispatcher("/adminPanel").forward(request, response);
                 break;
         }

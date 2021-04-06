@@ -24,7 +24,6 @@
           <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Войти</button>
           </div>
-       <p><a href="registrationForm">Регистрация</a></p>
     </form>
 </div>
 

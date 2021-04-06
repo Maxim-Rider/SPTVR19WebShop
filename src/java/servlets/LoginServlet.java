@@ -100,6 +100,20 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession(false);
+        User user = null;
+        if(session != null){
+            user=(User)session.getAttribute("user");
+            if(user != null){
+                if(userRolesFacade.isRole("ADMIN",user)){
+                    request.setAttribute("role", "ADMIN");
+                }else if(userRolesFacade.isRole("MANAGER",user)){
+                    request.setAttribute("role", "MANAGER");
+                }else if(userRolesFacade.isRole("BUYER",user)){
+                    request.setAttribute("role", "BUYER");
+                }
+            }
+        }
         String path = request.getServletPath();
 
         switch (path) {
@@ -110,7 +124,7 @@ public class LoginServlet extends HttpServlet {
             case "/login":
                 String login = request.getParameter("login");
                 String password = request.getParameter("password");
-                User user = userFacade.findByLogin(login);
+                user = userFacade.findByLogin(login);
                 if(user == null){
                     request.setAttribute("info", "Нет такого пользователя или неправильный пароль");
                     request.getRequestDispatcher("/showLoginForm").forward(request, response);
@@ -121,7 +135,14 @@ public class LoginServlet extends HttpServlet {
                     request.getRequestDispatcher("/showLoginForm").forward(request, response);
                     break;
                 }
-                HttpSession session = request.getSession(true);
+                session = request.getSession(true);
+                if(userRolesFacade.isRole("ADMIN",user)){
+                    request.setAttribute("role", "ADMIN");
+                }else if(userRolesFacade.isRole("MANAGER",user)){
+                    request.setAttribute("role", "MANAGER");
+                }else if(userRolesFacade.isRole("BUYER",user)){
+                    request.setAttribute("role", "BUYER");
+                }
                 session.setAttribute("user", user);
                 request.setAttribute("info", "Вы вошли! :)");
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
@@ -131,6 +152,7 @@ public class LoginServlet extends HttpServlet {
                 if(session != null){
                     session.invalidate();
                 }
+                request.setAttribute("role", null);
                 request.setAttribute("info", "Вы вышли! :)");
                 request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
                 break;
