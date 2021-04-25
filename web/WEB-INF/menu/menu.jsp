@@ -74,7 +74,7 @@
           
           <c:otherwise>
               <a class="nav-link <c:if test="${activeListFurnitures eq true}">active</c:if>" aria-current="page" href="listFurnitures">Список товара</a>
-              <a class="nav-link <c:if test="${activeShowLoginForm eq true}">active</c:if>" href="showLoginForm">Войти</a>
+              <a class="nav-link <c:if test="${activeShowLoginForm eq true}">active</c:if>" id="showLoginForm" href="showLoginForm">Войти</a>
               <a class="nav-link <c:if test="${activeRegistrationForm eq true}">active</c:if>" href="registrationForm">Регистрация</a>
           </c:otherwise>
       </c:choose>

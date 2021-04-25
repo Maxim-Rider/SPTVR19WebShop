@@ -18,11 +18,11 @@
           <div class="mb-3 row">
             <label for="password" class="col-sm-2 col-form-label">Пароль</label>
             <div class="col-sm-10">
-              <input type="password" class="form-control" name="password" id="password">
+              <input type="password" class="form-control" name="password" id="password" value="${password}">
             </div>
           </div>
           <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3">Войти</button>
+            <button type="submit" value="Войти" class="btn btn-primary mb-3">Войти</button>
           </div>
     </form>
 </div>
