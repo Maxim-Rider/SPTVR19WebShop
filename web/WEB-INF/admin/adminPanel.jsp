@@ -21,7 +21,7 @@
                         <option value="${entry.key.id}" <c:if test="${userId eq entry.key.id}"> selected </c:if>>
                             ${entry.key.buyer.firstname} 
                             ${entry.key.buyer.lastname}. 
-                            Логин: ${entry.key.login}. Роль: 
+                            логин: ${entry.key.login}. роль: 
                                 <c:forEach var="role" items="${entry.value}"><span>${role.roleName} </span></c:forEach>
                         </option>
                     </c:forEach>
