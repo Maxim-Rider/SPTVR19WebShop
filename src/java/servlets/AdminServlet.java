@@ -124,18 +124,25 @@ public class AdminServlet extends HttpServlet {
                 }
                 Role r = roleFacade.find(Long.parseLong(roleId));
                 User u = userFacade.find(Long.parseLong(userId));
-                if("0".equals(changeRole)){
-                    userRolesFacade.setRoleToUser(r,u);
+                if(!"admin".equals(user.getLogin())){
+                    userRolesFacade.setRoleToUser(r, u);
                     request.setAttribute("info", "Роль изменена");
-                }else if("1".equals(changeRole)){
-                    userRolesFacade.removeRoleFromUser(r,u);
-                    request.setAttribute("info", "Роль удалена");
-                }else {
+                }else{
                     request.setAttribute("userId", userId);
                     request.setAttribute("roleId", roleId);
                     request.setAttribute("info", "Изменить роль невозможно");
                 }
- 
+//                if("0".equals(changeRole)){
+//                    userRolesFacade.setRoleToUser(r,u);
+//                    request.setAttribute("info", "Роль изменена");
+//                }else if("1".equals(changeRole)){
+//                    userRolesFacade.removeRoleFromUser(r,u);
+//                    request.setAttribute("info", "Роль удалена");
+//                }else {
+//                    request.setAttribute("userId", userId);
+//                    request.setAttribute("roleId", roleId);
+//                    request.setAttribute("info", "Изменить роль невозможно");
+//                }
                 request.getRequestDispatcher("/adminPanel").forward(request, response);
                 break;
         }

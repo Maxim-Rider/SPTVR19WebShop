@@ -17,8 +17,7 @@
         </ol>-->
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-        <h3 class="w-100 my-5 text-center">Список читателей</h3>
+        <h3 class="w-100 my-5 text-center">Список покупателей</h3>
         <p class="">Всего пользователей: ${usersCount}<p>
         <table id="tableListBuyers" class="table table-striped">
               <thead>
@@ -44,4 +43,9 @@
                         <td>${entry.key.buyer.wallet/100}</td>
                         <td>${entry.key.login}</td>
                         <td><c:if test="${entry.value[0] ne ''}">${entry.value[0]}</c:if></td>
-   
+                    </tr>
+                </c:forEach>
+                    
+              </tbody>
+          
+        </table>
