@@ -14,12 +14,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Comp
  */
 @Entity
+@XmlRootElement
+
 public class User implements Serializable, EntityInterface{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,7 @@ public class User implements Serializable, EntityInterface{
     @Column(unique = true)
     private String login;
     private String password;
+    private String salt;
 
     @OneToOne
     private Buyer buyer;
@@ -34,10 +38,11 @@ public class User implements Serializable, EntityInterface{
     public User() {
     }
 
-    public User(String login, String password, Buyer buyer) {
+    public User(String login, String password, String salt,  Buyer buyer) {
         this.login = login;
         this.password = password;
         this.buyer = buyer;
+        this.salt = salt;
     }
 
   
@@ -73,6 +78,7 @@ public class User implements Serializable, EntityInterface{
                 + ", password=" + password 
                 + ", buyer=" + buyer.getFirstname()
                 + " " + buyer.getLastname()
+                + ", wallet=" + buyer.getWalletStr()
                 + '}';
     }
 
@@ -103,7 +109,9 @@ public class User implements Serializable, EntityInterface{
         if (!Objects.equals(this.password, other.password)) {
             return false;
         }
-        
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
         if (!Objects.equals(this.buyer, other.buyer)) {
             return false;
         }
@@ -118,7 +126,13 @@ public class User implements Serializable, EntityInterface{
         this.id = id;
     }
 
-    
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
         
 
 }

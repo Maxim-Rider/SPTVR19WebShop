@@ -11,12 +11,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Comp
  */
 @Entity
+@XmlRootElement
+
 public class Buyer implements Serializable, EntityInterface{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +28,7 @@ public class Buyer implements Serializable, EntityInterface{
     private String lastname;
     private String phone;
     private Integer wallet;
+
     
     
 
@@ -75,23 +79,7 @@ public class Buyer implements Serializable, EntityInterface{
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    public Integer getWallet() {
-        return wallet;
-    }
 
-    public void setWallet(Integer wallet) {
-        this.wallet = wallet;
-    }
-    public void setWallet(String wallet) {
-        try {
-            int walletInt = Integer.parseInt(wallet);
-            this.wallet = walletInt;
-            System.out.println("Строка "+wallet+" успешно преобразована в число.");
-        } catch (Exception e) {
-            System.out.println("Введены не цифры. Поле не изменено");
-        }
-        
-    }
 
     @Override
     public String toString() {
@@ -148,6 +136,35 @@ public class Buyer implements Serializable, EntityInterface{
         this.id = id;
     }
 
-   
+   public int getWallet() {
+        return wallet;
+    }
+    public String getWalletStr() {
+        Double dWallet = (double)this.wallet/100;
+        return dWallet.toString();
+    }
+    public double getWalletDouble() {
+        return (double)this.wallet/100;
+    }
+    
+
+    public void setWallet(int wallet) {
+        this.wallet = wallet;
+    }
+    public void setWallet(String wallet) throws NumberFormatException {
+        wallet = wallet.trim().replaceAll(",", ".");
+        try {
+            double dWallet = Double.parseDouble(wallet);
+            this.wallet = (int)(dWallet * 100);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Неправильный формат числа");
+        }
+    }
+    public void setWallet(double wallet) {
+        this.wallet = (int)(wallet * 100);
+    }
     
 }
+
+    
+

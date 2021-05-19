@@ -10,9 +10,12 @@ import entity.Buyer;
 import entity.Furniture;
 import entity.User;
 import entity.Cover;
+import entity.Text;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -27,6 +30,9 @@ import session.HistoryFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
 import session.CoverFacade;
+import session.TextFacade;
+import tools.SheduleDiscount;
+
 
 /**
  *
@@ -40,6 +46,8 @@ import session.CoverFacade;
     "/editBuyerForm",
     "/editBuyer",
     "/uploadForm",
+    "/discountForm",
+    "/setDiscount",
 })
 public class ManagerServlet extends HttpServlet {
 
@@ -57,6 +65,7 @@ public class ManagerServlet extends HttpServlet {
     
     @EJB private UserRolesFacade userRolesFacade;
     @EJB private CoverFacade coverFacade;
+    @EJB private TextFacade textFacade;
 
 
 
@@ -105,30 +114,31 @@ public class ManagerServlet extends HttpServlet {
                 request.setAttribute("activeAddFurniture", "true");
                 List<Cover> listCovers = coverFacade.findAll();
                 request.setAttribute("listCovers", listCovers);
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("addFurniture")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("addFurniture")).forward(request, response);
                 break;
             case "/createFurniture":
                 String name = request.getParameter("name");
                 String color = request.getParameter("color");
                 String size = request.getParameter("size");
                 String quantity = request.getParameter("quantity");
-                String text = request.getParameter("text");
                 String price = request.getParameter("price");
                 String coverId = request.getParameter("coverId");
+                String textId = request.getParameter("textId");
                 if ("".equals(name) || name == null
                         || "".equals(color) || color == null
                         || "".equals(size) || size == null
                         || "".equals(quantity) || quantity == null
                         || "".equals(price) || price == null
-                        || "".equals(text) || text == null
-                        || "".equals(coverId) || coverId == null){
+                        || "".equals(textId) || textId == null
+                        || "".equals(coverId) || coverId == null
+                        || textId==null || "".equals(textId)){
                     request.setAttribute("name", name);
                     request.setAttribute("color", color);
                     request.setAttribute("size", size);
                     request.setAttribute("quantity", quantity);
-                    request.setAttribute("text",text);
                     request.setAttribute("price", price);
                     request.setAttribute("coverId",coverId);
+                    request.setAttribute("textId",textId);
                     request.setAttribute("info", "Заполните все поля.");
                     request.getRequestDispatcher("/addFurniture").forward(request, response);
                     break;
@@ -139,31 +149,27 @@ public class ManagerServlet extends HttpServlet {
                     break; 
                 }
                 Cover cover = coverFacade.find(Long.parseLong(coverId));
-                Furniture furniture = null;
-                try {
-                    furniture = new Furniture(name, color, size, Integer.parseInt(quantity), text, Integer.parseInt(price), cover);
-                } catch (NumberFormatException e) {
-                    request.setAttribute("info","Неправильный формат цены: " + price );
-                    request.setAttribute("name", name);
-                    request.setAttribute("color", color);
-                    request.setAttribute("size", size);
-                    request.setAttribute("quantity", quantity);
-                    request.setAttribute("text",text);
-                    request.setAttribute("price", price);
-                    request.setAttribute("coverId",coverId);
-                    request.getRequestDispatcher("/addFurniture").forward(request, response);
-                    break;  
-                }
+                Text text = textFacade.find(Long.parseLong(textId));
+                Furniture furniture = new Furniture(
+                        name, 
+                        color, 
+                        size,
+                        quantity, 
+                        price, 
+                        cover,
+                        text
+                );
                 furnitureFacade.create(furniture);
-                request.setAttribute("info", "Товар\"" +furniture.getName()+ "\" был добавлен");
-                request.getRequestDispatcher("/addFurniture").forward(request, response);
+                request.getRequestDispatcher("/listFurnitures")
+                        .forward(request, response);
+                
                 break;
             case "/editFurnitureForm":
                 request.setAttribute("activeEditFurnitureForm", "true");
                 String furnitureId = request.getParameter("furnitureId");
                 furniture = furnitureFacade.find(Long.parseLong(furnitureId));
                 request.setAttribute("furniture", furniture);
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("editFurniture")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("editFurniture")).forward(request, response);
                 break;
             case "/editFurniture":
                 furnitureId = request.getParameter("furnitureId");
@@ -203,14 +209,14 @@ public class ManagerServlet extends HttpServlet {
                 furnitureFacade.edit(furniture);
                 request.setAttribute("furnitureId", furniture.getId());
                 request.setAttribute("info","Товар успешно отредактирован: " + furniture.toString() );
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("index")).forward(request, response);
                 break;                
             case "/editBuyerForm":
                 request.setAttribute("activeEditBuyerForm", "true");
                 String buyerId = request.getParameter("buyerId");
                 Buyer buyer = buyerFacade.find(Long.parseLong(buyerId));
                 request.setAttribute("buyer", buyer);
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("editBuyer")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("editBuyer")).forward(request, response);
                 break;
             case "/editBuyer":
                 buyerId = request.getParameter("buyerId");
@@ -240,7 +246,51 @@ public class ManagerServlet extends HttpServlet {
                 break;
             case "/uploadForm":
                     
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("upload")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("upload")).forward(request, response);
+                break;
+                
+            case "/discountForm":
+                request.setAttribute("activeDiscountForm", "true");
+                List<Furniture> listFurnitures = furnitureFacade.findNotDiscountBook();
+                request.setAttribute("listBooks", listFurnitures);
+                request.getRequestDispatcher(LoginServlet
+                                .pathToFile
+                                .getString("discountForm")
+                        )
+                        .forward(request, response);
+                break;
+            case "/setDiscount":
+                furnitureId = request.getParameter("furnitureId");
+                String discount = request.getParameter("discount");
+                String dateDiscount = request.getParameter("dateDiscount");//format yyyy-mm-dd
+                String duration = request.getParameter("duration");
+                String durationType = request.getParameter("durationType");
+                if(furnitureId==null || "".equals(furnitureId)  
+                       || discount==null || "".equals(discount) 
+                       || dateDiscount==null || "".equals(dateDiscount) 
+                       || duration==null || "".equals(duration) 
+                       || durationType == null || "".equals(durationType)
+                       ){
+                    request.setAttribute("info", "Заполние все поля");
+                    request.getRequestDispatcher("/discountForm")
+                            .forward(request, response);
+                }
+                furniture = furnitureFacade.find(Long.parseLong(furnitureId));
+                String year = dateDiscount.substring(0,4);
+                String month = dateDiscount.substring(5,5+2);
+                String day = dateDiscount.substring(8,8+2);
+                Calendar cDateDiscount = new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day));
+                SheduleDiscount sheduleDiscount = new SheduleDiscount();
+                Furniture discountFurniture = sheduleDiscount.setDiscount(
+                        furniture, 
+                        Integer.parseInt(discount),
+                        cDateDiscount.getTime(), 
+                        Integer.parseInt(duration),
+                        durationType
+                );
+                furnitureFacade.edit(discountFurniture);
+                request.getRequestDispatcher("/listFurnitures")
+                        .forward(request, response);
                 break;
            
         }
@@ -285,5 +335,6 @@ public class ManagerServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    
     
 }

@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package servlets;
 
 import java.io.BufferedInputStream;
@@ -5,7 +10,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URLDecoder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,13 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Comp
+ * @author Melnikov
  */
-@WebServlet(name = "InsertFile", urlPatterns = {"/insertFile/*"})
-public class InsertFile extends HttpServlet {
-
+@WebServlet(name = "InsertFileServlet", urlPatterns = {
+    "/insertFile/*"
+})
+public class InsertFileServlet extends HttpServlet {
     static final int DEFAULT_BUFFER_SIZE = 10240;
-
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -40,7 +44,6 @@ public class InsertFile extends HttpServlet {
             response.sendError((HttpServletResponse.SC_NOT_FOUND));
             return;
         }
-
         File file = new File(URLDecoder.decode(filePath,"UTF-8"));
         if(!file.exists()){
             response.sendError((HttpServletResponse.SC_NOT_FOUND));
@@ -54,9 +57,7 @@ public class InsertFile extends HttpServlet {
         response.setContentType(contentType);
         response.setBufferSize(DEFAULT_BUFFER_SIZE);
         response.setHeader("Content-Length", String.valueOf(file.length()));
-        response.setHeader("Content-Disposition", "attachment; filename=\""
-                                                             +file.getName()
-                                                             +"\"");
+        response.setHeader("Content-Disposition", "attachment: filename=\"" + file.getName()+"\"");
         BufferedInputStream input = null;
         BufferedOutputStream output = null;
         try {
@@ -75,6 +76,7 @@ public class InsertFile extends HttpServlet {
                 input.close();
             }
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

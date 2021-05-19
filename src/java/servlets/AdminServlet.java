@@ -7,6 +7,7 @@ package servlets;
 
 
 import entity.Buyer;
+import entity.Furniture;
 import entity.User;
 import entity.Role;
 import entity.UserRoles;
@@ -83,21 +84,18 @@ public class AdminServlet extends HttpServlet {
             request.getRequestDispatcher("/showLoginForm").forward(request, response);
             return;
         }
-        if(userRolesFacade.isRole("ADMIN",user)){
-            request.setAttribute("role", "ADMIN");
-        }else if(userRolesFacade.isRole("MANAGER",user)){
-            request.setAttribute("role", "MANAGER");
-        }else if(userRolesFacade.isRole("BUYER",user)){
-            request.setAttribute("role", "BUYER");
+        request.setAttribute("role", userRolesFacade.getTopRoleForUser(user));
+        List<Furniture> basketList = (List<Furniture>) session.getAttribute("basketList");
+        if(basketList != null){
+            request.setAttribute("basketListCount", basketList.size());
         }
         String path = request.getServletPath();
-
         switch (path) {
             case "/listBuyers":
                 request.setAttribute("listBuyers", "true");
                 List<Buyer> listBuyers = buyerFacade.findAll();
                 request.setAttribute("listBuyers", listBuyers);
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("listBuyers")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("listBuyers")).forward(request, response);
                 break;
             case "/adminPanel":
                 request.setAttribute("adminPanel", "true");
@@ -109,7 +107,7 @@ public class AdminServlet extends HttpServlet {
                     usersMap.put(u, userRolesFacade.getRolesForUser(u));
                 }
                 request.setAttribute("usersMap", usersMap);
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("adminPanel")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("adminPanel")).forward(request, response);
                 break;
             case "/setRoleToUser":
                 String roleId = request.getParameter("roleId");

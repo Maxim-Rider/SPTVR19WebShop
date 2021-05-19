@@ -31,22 +31,23 @@
 
 
 
-    <div class="w-100 my-4">
-        <div class="row w-100 d-flex justify-content-center border">
-            <h4>${user.buyer.firstname} ${user.buyer.lastname} купил следующие товары:</h4>
-        </div>
-        <div class="row w-100 d-flex justify-content-center">
-            <c:forEach var="furniture" items="${listBoughtFurnitures}">
-                <div class="card col m-2 text-center" style="min-width: 12rem;">
-                <img src="insertFile/${furniture.cover.path}" class="mx-auto img-thumbnail" style="max-width: 7rem; max-height: 10rem" class="card-img-top" alt="${furniture.cover.description}">
-                <div class="card-body">
-                  <h5 class="card-title">Название: ${furniture.name}</h5>
-                  <p class="card-text">Цвет: ${furniture.color}</p>
-                  <p class="card-text">Размер: ${furniture.size}</p>
-                  <p class="card-text">Цена: ${furniture.price}$</p>
-                  <p class="card-text">Описание: ${furniture.text}</p>
-                </div>
-              </div>       
-            </c:forEach>
+
+<h3 class="w-100 my-5 text-center">Список купленных товаров</h3>
+
+<div class="w-100 d-flex justify-content-center m-2">
+  <c:forEach var="furniture" items="${listFurnitures}">
+    <div class="card m-2 border" style="max-width: 12rem; max-height: 25rem">
+        <img src="insertFile/${furniture.cover.path}" class="card-img-top" style="max-width: 12rem; max-height: 15rem" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">${furniture.name}</h5>
+          <div class="card-text">${furniture.color}</div>
+          <div class="card-text">${furniture.size}</div>
+          <div class="card-text">${furniture.quantity}</div>
+          <div class="card-text">${furniture.price}</div>
+          <p class="d-inline">
+            <a href="readFurniture?furnitureId=${furniture.id}" class="link text-nowrap">Просмотреть</a>
+          </p>
         </div>
     </div>
+  </c:forEach>
+</div>

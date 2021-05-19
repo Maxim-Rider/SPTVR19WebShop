@@ -15,33 +15,38 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Comp
  */
 @Entity
-public class History implements Serializable, EntityInterface{
+@XmlRootElement
+public class History implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
+    @OneToOne()
     private Furniture furniture;
-    @OneToOne
+    @OneToOne()
     private Buyer buyer;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date takeOnDate;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date returnDate;
 
     public History() {
     }
 
-    public History(Furniture furniture, Buyer buyer, Date takeOnDate) {
+    public History(Furniture furniture, Buyer buyer, Date takeOnDate, Date returnDate) {
         this.furniture = furniture;
         this.buyer = buyer;
         this.takeOnDate = takeOnDate;
+        this.returnDate = returnDate;
   
     }
-
+    
     
 
 

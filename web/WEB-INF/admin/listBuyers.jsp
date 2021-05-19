@@ -19,7 +19,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <h3 class="w-100 my-5 text-center">Список покупателей</h3>
         <p class="">Всего пользователей: ${usersCount}<p>
-        <table id="tableListBuyers" class="table table-striped">
+        <table id="tableListReaders" class="table table-striped">
               <thead>
               <th>№</th>
               <th>Id</th>

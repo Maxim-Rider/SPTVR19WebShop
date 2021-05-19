@@ -6,12 +6,15 @@ import entity.History;
 import entity.User;
 import entity.Role;
 import entity.UserRoles;
+import java.util.Date;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +27,7 @@ import session.HistoryFacade;
 import session.RoleFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
+import tools.EncryptPassword;
 
 /**
  *
@@ -38,6 +42,7 @@ import session.UserRolesFacade;
     "/listFurnitures",
 })
 public class LoginServlet extends HttpServlet {
+
     @EJB 
     private UserFacade userFacade;
     
@@ -55,16 +60,20 @@ public class LoginServlet extends HttpServlet {
     @EJB private RoleFacade roleFacade;
     @EJB private UserRolesFacade userRolesFacade;
     
-    public static final ResourceBundle pathToJsp = ResourceBundle.getBundle("property.pathToJsp");
+    @Inject private EncryptPassword encryptPassword;
 
+    
+    public static final ResourceBundle pathToFile = ResourceBundle.getBundle("property.pathToFile");
+    
     @Override
     public void init() throws ServletException {
-        super.init();
-        if(userFacade.findAll().size() > 0) return;
+        if(userFacade.count() > 0) return;
+        String salt = encryptPassword.createSalt();
+        String password = encryptPassword.createHash("12345", salt);
         //Создаем суппер администратора
         Buyer buyer = new Buyer("Max", "Kolesnikov", "58007334", "99999");
         buyerFacade.create(buyer);
-        User user = new User("admin", "12345", buyer);
+        User user = new User("admin", password, salt, buyer);
         userFacade.create(user);
 
         //Создаем и назначаем роли пользователю
@@ -100,6 +109,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        List<Furniture> purchasedFurnitures = null;
         HttpSession session = request.getSession(false);
         User user = null;
         if(session != null){
@@ -117,35 +127,42 @@ public class LoginServlet extends HttpServlet {
         String path = request.getServletPath();
 
         switch (path) {
+            case "/index":
+                List<Furniture> listFurnitures = furnitureFacade.findAll();
+                request.setAttribute("listBooks", listFurnitures);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("index")).forward(request, response);
+                break;
             case "/showLoginForm":
                 request.setAttribute("activeShowLoginForm", "true");
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("login")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("login")).forward(request, response);
                 break;
             case "/login":
                 String login = request.getParameter("login");
                 String password = request.getParameter("password");
-                user = userFacade.findByLogin(login);
-                if(user == null){
-                    request.setAttribute("info", "Нет такого пользователя или неправильный пароль");
+                if("".equals(login) || login == null
+                       || "".equals(password) || password == null){
+                    request.setAttribute("info","Заполните все поля");
                     request.getRequestDispatcher("/showLoginForm").forward(request, response);
                     break;
                 }
-                if(!password.equals(user.getPassword())){
-                     request.setAttribute("info", "Нет такого пользователя или неправильный пароль");
+                user = userFacade.findByLogin(login);
+                if(user == null){
+                    request.setAttribute("info","Нет такого пользователя");
+                    request.getRequestDispatcher("/showLoginForm").forward(request, response);
+                    break;
+                }
+                String salt = user.getSalt();
+                String encryptPwd = encryptPassword.createHash(password, salt);
+                if(!encryptPwd.equals(user.getPassword())){
+                    request.setAttribute("info","Нет такого пользователя");
                     request.getRequestDispatcher("/showLoginForm").forward(request, response);
                     break;
                 }
                 session = request.getSession(true);
-                if(userRolesFacade.isRole("ADMIN",user)){
-                    request.setAttribute("role", "ADMIN");
-                }else if(userRolesFacade.isRole("MANAGER",user)){
-                    request.setAttribute("role", "MANAGER");
-                }else if(userRolesFacade.isRole("BUYER",user)){
-                    request.setAttribute("role", "BUYER");
-                }
                 session.setAttribute("user", user);
-                request.setAttribute("info", "Вы вошли! :)");
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
+                request.setAttribute("info","Вы вошли как "+ user.getLogin());
+                request.setAttribute("role", userRolesFacade.getTopRoleForUser(user));
+                request.getRequestDispatcher("/index").forward(request, response);
                 break;
             case "/logout":
                 session = request.getSession(false);
@@ -154,13 +171,13 @@ public class LoginServlet extends HttpServlet {
                 }
                 request.setAttribute("role", null);
                 request.setAttribute("info", "Вы вышли! :)");
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("index")).forward(request, response);
                 break;
                 
             
             case "/registrationForm":
                 request.setAttribute("activeRegistrationForm", "true");
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("registration")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("registration")).forward(request, response);
                 break;
             case "/registration":
                 String firstname = request.getParameter("firstname");
@@ -186,20 +203,33 @@ public class LoginServlet extends HttpServlet {
                 }
                 buyer = new Buyer(firstname, lastname, phone, wallet);
                 buyerFacade.create(buyer);
-                user = new User(login, password, buyer);
+                salt = encryptPassword.createSalt();
+                encryptPwd = encryptPassword.createHash(password, salt);
+                user = new User(login, encryptPwd, salt, buyer);
                 userFacade.create(user);
                 Role roleBuyer = roleFacade.findByName("BUYER");
                 UserRoles userRoles = new UserRoles(user, roleBuyer);
                 userRolesFacade.create(userRoles);
                 request.setAttribute("info", "Покупатель\"" +buyer.getFirstname()+" " +buyer.getLastname()+ "\" был зарегестрирован");
-                request.getRequestDispatcher(LoginServlet.pathToJsp.getString("index")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("index")).forward(request, response);
                 break;
             case "/listFurnitures":
-                request.setAttribute("activeListFurnitures", "true");
-                List<Furniture> listFurnitures = furnitureFacade.findAll();
+                request.setAttribute("activeListFurniture", "true");
+
+                request.setAttribute("today", new Date());
+                listFurnitures = null;
+                try {
+                    listFurnitures = furnitureFacade.findAll();
+                    if(purchasedFurnitures != null){
+                        listFurnitures.removeAll(purchasedFurnitures);
+                    }
+                } catch (Exception e) {
+                    listFurnitures = new ArrayList<>();
+                }
+                
                 request.setAttribute("listFurnitures", listFurnitures);
-                request.getRequestDispatcher("/WEB-INF/guest/listFurnitures.jsp").forward(request, response);
-                break;
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("listBooks")).forward(request, response);
+                break;    
 //            case "/descriptionForm":
 //                List<History> listBoughtFurnitures = historyFacade.findAll();
 //                request.setAttribute("listBoughtFurnitures", listBoughtFurnitures);

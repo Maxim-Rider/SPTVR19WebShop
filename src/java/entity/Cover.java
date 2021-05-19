@@ -11,11 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlRootElement;
 /**
  *
  * @author Comp
  */
 @Entity
+@XmlRootElement
+
 public class Cover implements Serializable, EntityInterface{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

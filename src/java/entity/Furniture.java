@@ -7,21 +7,22 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Basic;
-import javax.persistence.Column;
+import java.util.Date;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Comp
  */
 @Entity
-public class Furniture implements Serializable, EntityInterface{
+@XmlRootElement
+public class Furniture implements Serializable{
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,16 +30,20 @@ public class Furniture implements Serializable, EntityInterface{
     private String color;
     private String size;
     private Integer quantity;
+    private Integer price;
     @OneToOne
     private Cover cover;
-    @Basic(fetch = FetchType.LAZY)
-    private String text;
-    private Integer price;
-
+    @OneToOne
+    private Text text;
+    private int discount;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date discountDate;
+    private int discountDuration;
+    
     public Furniture() {
     }
 
-    public Furniture(String name, String color, String size, Integer quantity, String text, Integer price, Cover cover) {
+    public Furniture(String name, String color, String size, Integer quantity, Integer price, Cover cover, Text text) {
         this.name = name;
         this.color = color;
         this.size = size;
@@ -47,32 +52,44 @@ public class Furniture implements Serializable, EntityInterface{
         this.price = price;
         this.cover = cover;
     }
-    public Furniture(String name, String color, String size, String quantity, String text, String price, Cover cover) {
+//    public Furniture(String name, String color, String size, String quantity, String price, Cover cover, Text text) {
+//        this.name = name;
+//        this.color = color;
+//        this.size = size;
+//        this.text = text;
+//        this.setQuantity(quantity);
+//        this.setPrice(price);
+//        this.cover = cover;
+//    }
+    public Furniture(String name, String color, String size, Double quantity, Double price, Cover cover, Text text) {
         this.name = name;
         this.color = color;
         this.size = size;
         this.text = text;
         this.setQuantity(quantity);
-        this.setPrice(price);
-        this.cover = cover;
-    }
-    public Furniture(String name, String color, String size, Double quantity, String text, Double price, Cover cover) {
-        this.name = name;
-        this.color = color;
-        this.size = size;
-        this.text = text;
-        this.setQuantity(quantity);
-        this.setPrice(price);
+        this.setPriceDouble(price);
         this.cover = cover;
     }
     
-    public String getText() {
-        return text;
+    public Furniture(String name, String color, String size, String quantity, String price, Cover cover, Text text) {
+        this.name = name;
+        this.color = color;
+        this.size = size;
+        this.setQuantity(quantity);
+        this.setPriceStr(price);
+        this.cover = cover;
+        this.text = text;
+ 
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public Furniture(String name, String color, String size, int parseInt, int parseInt0) {
+        this.name = name;
+        this.color = color;
+        this.size = size;
+
     }
+    
+    
    
     
     
@@ -90,9 +107,19 @@ public class Furniture implements Serializable, EntityInterface{
 
     }
     
-    public String getPriceToStr(){
-        double dPrice = this.price/100;
-        return String.format("%.2f", dPrice);
+    public String getPriceStr() {
+        Double dPrice = (double)this.price/100;
+        return dPrice.toString();
+    }
+
+    public void setPriceStr(String price) {
+        price = price.trim().replaceAll(",", ".");
+        try {
+            double dPrice = Double.parseDouble(price);
+            this.price = (int)(dPrice * 100);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Неправильный формат числа");
+        }
     }
 
     private void setPrice(Double price) {
@@ -116,9 +143,20 @@ public class Furniture implements Serializable, EntityInterface{
         this.price = price;
     }
     
-   
+   public void setPriceDouble(double price) {
+        this.price = (int)(price * 100);
+    }
+   public double getPriceDouble() {
+        return (double)this.price/100;
+    }
     
-    
+    public Text getText() {
+        return text;
+    }
+
+    public void setText(Text text) {
+        this.text = text;
+    }
   
 
     
@@ -254,6 +292,29 @@ public class Furniture implements Serializable, EntityInterface{
 //        }
 //    }
 
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public Date getDiscountDate() {
+        return discountDate;
+    }
+
+    public void setDiscountDate(Date discountDate) {
+        this.discountDate = discountDate;
+    }
+
+    public int getDiscountDuration() {
+        return discountDuration;
+    }
+
+    public void setDiscountDuration(int discountDuration) {
+        this.discountDuration = discountDuration;
+    }
     
 }
     

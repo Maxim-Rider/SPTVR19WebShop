@@ -17,6 +17,7 @@ import web.webinf.guest.LoginFormPage;
  */
 public class MenuPage {
     protected WebDriver driver;
+    private final By infoBy = By.id("info");
     private final By loginformBy = By.id("loginForm");
     private final By adminformBy = By.id("adminForm");
     private final By listBuyersBy = By.id("adminForm");
@@ -41,5 +42,8 @@ public class MenuPage {
 
     public void logout() {
         driver.findElement(logoutBy).click();
+    }
+    public String getMessageInfo(){
+        return driver.findElement(infoBy).getText();
     }
 }

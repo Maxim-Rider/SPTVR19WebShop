@@ -6,6 +6,7 @@
 package session;
 
 import entity.Furniture;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +28,15 @@ public class FurnitureFacade extends AbstractFacade<Furniture> {
 
     public FurnitureFacade() {
         super(Furniture.class);
+    }
+
+    public List<Furniture> findNotDiscountBook() {
+        try {
+           return em.createQuery("SELECT furniture FROM Furniture furniture WHERE furniture.discount <= 0")
+                   .getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }

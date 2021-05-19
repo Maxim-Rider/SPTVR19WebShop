@@ -43,7 +43,7 @@
                 </select>
             </div>
         </div>
-        <div class="row w-100">
+<!--        <div class="row w-100">
             <div class="col text-end">
                 <input class="form-check-input" name="changeRole" type="radio" value="0" checked>
             </div>
@@ -58,7 +58,7 @@
             <div class="col  text-start">
                 Удалить роль
             </div>
-        </div>
+        </div>-->
         <div class="row">
             <div class="col m-2 text-center">
                 <input type="submit" value="Изменить роль пользователю">
