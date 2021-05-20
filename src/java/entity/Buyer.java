@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.json.JsonValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -148,9 +149,6 @@ public class Buyer implements Serializable, EntityInterface{
     }
     
 
-    public void setWallet(int wallet) {
-        this.wallet = wallet;
-    }
     public void setWallet(String wallet) throws NumberFormatException {
         wallet = wallet.trim().replaceAll(",", ".");
         try {
@@ -163,8 +161,5 @@ public class Buyer implements Serializable, EntityInterface{
     public void setWallet(double wallet) {
         this.wallet = (int)(wallet * 100);
     }
-    
 }
-
-    
-
+   

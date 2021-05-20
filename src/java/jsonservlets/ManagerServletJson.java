@@ -119,7 +119,7 @@ public class ManagerServletJson extends HttpServlet {
                     text = new Text(fileName, sbFullPathToFile.toString());
                     textFacade.create(text);
                 }
-
+                
             }
             if(cover == null || text == null){
                 json=job.add("requestStatus", "false")

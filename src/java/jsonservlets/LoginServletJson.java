@@ -29,7 +29,7 @@ import session.BuyerFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
 import tools.EncryptPassword;
-import javax.json.JsonBuyer;
+import javax.json.JsonReader;
 
 /**
  *
@@ -63,12 +63,12 @@ public class LoginServletJson extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         String json = null;
-        JsonBuyer jsonBuyer = Json.createBuyer(request.getBuyer());
+        JsonReader jsonReader = Json.createReader(request.getReader());
         JsonObjectBuilder job = Json.createObjectBuilder();
         String path = request.getServletPath();
         switch (path) {
             case "/createUserJson":
-                JsonObject jsonObject = jsonBuyer.readObject();
+                JsonObject jsonObject = jsonReader.readObject();
                 String firstname = jsonObject.getString("firstname","");
                 String lastname = jsonObject.getString("lastname","");
                 String phone = jsonObject.getString("phone","");
@@ -110,7 +110,7 @@ public class LoginServletJson extends HttpServlet {
                         .toString();
                 break;
             case "/loginJson": 
-                jsonObject = jsonBuyer.readObject();
+                jsonObject = jsonReader.readObject();
                 login = jsonObject.getString("login","");
                 password = jsonObject.getString("password","");
                 if(login == null || "".equals(login)

@@ -170,9 +170,9 @@ public class UserServlet extends HttpServlet {
                 break;
             case "/buyFurnitures":
                 user = userFacade.find(user.getId());
-                //Получаем список книг в корзине из сессии
+                //Получаем список товаров в корзине из сессии
                 listFurnituresInBasket = (List<Furniture>) session.getAttribute("basketList");
-                //Получаем массив отмеченных для покупки книг в корзине или нажатия ссылки при прочтении отрывка
+                //Получаем массив отмеченных для покупки товаров в корзине или нажатия ссылки при прочтении отрывка
                 String[] selectedFurnitures = request.getParameterValues("selectedFurnitures");
                 if(selectedFurnitures == null){
                     request.setAttribute("info", "Чтобы купить выберите книгу.");
@@ -287,7 +287,7 @@ public class UserServlet extends HttpServlet {
                             try(Stream<String> stream = Files.lines(file.toPath(), StandardCharsets.UTF_8)){
                                 stream.forEachOrdered(line -> out.print(line));
                             }
-                        }else{//если список купленных пользователем товаров НЕ СОДЕРЖИТ книгу
+                        }else{//если список купленных пользователем товаров НЕ СОДЕРЖИТ товар
                             try (Stream<String> lines = Files.lines (file.toPath(), StandardCharsets.UTF_8)){
                                 int numLine = 0;
                                 for (String line : (Iterable<String>) lines::iterator)
