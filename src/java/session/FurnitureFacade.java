@@ -30,7 +30,7 @@ public class FurnitureFacade extends AbstractFacade<Furniture> {
         super(Furniture.class);
     }
 
-    public List<Furniture> findNotDiscountBook() {
+    public List<Furniture> findNotDiscountFurniture() {
         try {
            return em.createQuery("SELECT furniture FROM Furniture furniture WHERE furniture.discount <= 0")
                    .getResultList();

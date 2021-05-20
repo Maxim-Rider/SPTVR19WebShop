@@ -45,13 +45,13 @@ import session.UserRolesFacade;
 @WebServlet(name = "UserServlet", urlPatterns = {
 
     "/addToBasket",
-    "/removeBookFromBasket",
+    "/removeFurnitureFromBasket",
     "/showBasket",
-    "/buyBooks",
-    "/purchasedBooks",
+    "/buyFurnitures",
+    "/purchasedFurnitures",
     "/editProfile",
     "/changeProfile",
-    "/readBook",
+    "/readFurniture",
     
 })
 public class UserServlet extends HttpServlet {
@@ -187,8 +187,8 @@ public class UserServlet extends HttpServlet {
                 for(String selectedFurnitureId : selectedFurnitures){
                     Furniture f = furnitureFacade.find(Long.parseLong(selectedFurnitureId));
                     long today = c.getTimeInMillis();
-                    long bookDiscountDate = f.getDiscountDate().getTime();
-                    if(f.getDiscountDate() != null && today > bookDiscountDate){
+                    long furnitureDiscountDate = f.getDiscountDate().getTime();
+                    if(f.getDiscountDate() != null && today > furnitureDiscountDate){
                         totalPricePurchase += f.getPrice() - f.getPrice()*f.getDiscount()/100;
                     }else{
                         totalPricePurchase += f.getPrice();
@@ -197,12 +197,12 @@ public class UserServlet extends HttpServlet {
                 }
                 if(userWallet < totalPricePurchase){
                     request.setAttribute("info", "Недостаточно денег для покупки");
-                    request.getRequestDispatcher("/listBooks").forward(request, response);
+                    request.getRequestDispatcher("/listFurnitures").forward(request, response);
                     break;
                 }
                 //Покупаем товар
                 for(Furniture buyFurniture : buyFurnitures){
-                    if(listFurnituresInBasket != null) listFurnituresInBasket.remove(buyFurniture); //если запрос пришел из корзины - удаляем из корзины купленную книгу
+                    if(listFurnituresInBasket != null) listFurnituresInBasket.remove(buyFurniture); //если запрос пришел из корзины - удаляем из корзины купленный товар
                     historyFacade.create(new History(buyFurniture,user.getBuyer(), new GregorianCalendar().getTime(),null));
                 }
                 //Списываем у покупателя деньги за купленные товары
@@ -219,7 +219,7 @@ public class UserServlet extends HttpServlet {
                     request.setAttribute("basker", listFurnituresInBasket.size());
                 }
                 request.setAttribute("info", "Куплено товара: "+selectedFurnitures.length);
-                request.getRequestDispatcher("/listBooks").forward(request, response);
+                request.getRequestDispatcher("/listFurnitures").forward(request, response);
                 break;
             case "/purchasedFurnitures":
                 request.setAttribute("activePurchasedFurnitures", "true");
@@ -299,7 +299,7 @@ public class UserServlet extends HttpServlet {
                             }
                             out.println("... ");
                             out.println("<br>");
-                            out.println("<p class=\"w-100 d-flex justify-content-center\"><a href=\"buyBooks?selectedBooks="+furniture.getId()+"\">(Для продолжения просмотра купите товар).</a></p>");
+                            out.println("<p class=\"w-100 d-flex justify-content-center\"><a href=\"buyFurnitures?selectedFurnitures="+furniture.getId()+"\">(Для продолжения просмотра купите товар).</a></p>");
                             out.println("</p>");
                         }
                         out.println("</p>");

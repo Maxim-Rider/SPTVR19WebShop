@@ -10,7 +10,7 @@
     <form action="setDiscount" class="row g-2" method="POST">
         <div class="col-md-6">
           <label for="listFurnitures" class="form-label">Выберите товар</label>
-          <select id="listBooks" name="furnitureId" class="form-select" >
+          <select id="listFurnitures" name="furnitureId" class="form-select" >
               <c:forEach var="furniture" items="${listFurnitures}">
                   <option value="${furniture.id}">${furniture.name}. ${furniture.color}. ${furniture.size} ${furniture.quantity} ${furniture.price} EUR</option>
               </c:forEach>

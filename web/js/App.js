@@ -2,17 +2,21 @@ import {authModule} from './AuthModule.js';
 import {furnitureModule} from './FurnitureModule.js';
 import {userModule } from './UserModule.js';
 
-
+document.getElementById("index").onclick = function (){
+    toogleMenuActive("index");
+    document.getElementById('info').innerHTML='&nbsp;';
+    furnitureModule.printListFurnitures();
+    
+}
 document.getElementById("addFurniture").onclick = function (){
     toogleMenuActive("addFurniture");
     document.getElementById('info').innerHTML='&nbsp;';
-    furnitureModule.printAddFurnitureForm();
-    
+    furnitureModule.printAddFurnitureForm();  
 };
 document.getElementById("listFurnitures").onclick = function (){
     toogleMenuActive("listFurnitures");
     document.getElementById('info').innerHTML='&nbsp;';
-    furnitureModule.printListBooks();
+    furnitureModule.printListFurnitures();
 };
 document.getElementById("purchasedFurnitures").onclick = function (){
     toogleMenuActive("purchasedFurnitures");
@@ -31,13 +35,15 @@ document.getElementById("adminPanel").onclick = function (){
 document.getElementById("showLoginForm").onclick = function (){
     toogleMenuActive("showLoginForm");
     document.getElementById('info').innerHTML='&nbsp;';
-    authModule.printLoginForm();
+    authModule.printShowLoginForm();
 };
 document.getElementById("logout").onclick = function (){
     toogleMenuActive("logout");
     document.getElementById('info').innerHTML='';
     authModule.logout();
 };
+
+
 
 furnitureModule.printListFurnitures();
 authModule.toogleMenu();

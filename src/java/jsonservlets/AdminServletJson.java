@@ -60,7 +60,7 @@ public class AdminServletJson extends HttpServlet {
             List<Role> listUserRoles = null;
             /*  [{
                     user:{userJson},
-                    role:"READER"
+                    role:"BUYER"
                 }]
             */
             JsonArrayBuilder jab = Json.createArrayBuilder();

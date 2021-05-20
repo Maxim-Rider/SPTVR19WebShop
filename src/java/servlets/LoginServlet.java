@@ -129,11 +129,11 @@ public class LoginServlet extends HttpServlet {
         switch (path) {
             case "/index":
                 List<Furniture> listFurnitures = furnitureFacade.findAll();
-                request.setAttribute("listBooks", listFurnitures);
+                request.setAttribute("listFurnitures", listFurnitures);
                 request.getRequestDispatcher(LoginServlet.pathToFile.getString("index")).forward(request, response);
                 break;
             case "/showLoginForm":
-                request.setAttribute("activeShowLoginForm", "true");
+                request.setAttribute("activeEnter", "true");
                 request.getRequestDispatcher(LoginServlet.pathToFile.getString("login")).forward(request, response);
                 break;
             case "/login":
@@ -228,7 +228,7 @@ public class LoginServlet extends HttpServlet {
                 }
                 
                 request.setAttribute("listFurnitures", listFurnitures);
-                request.getRequestDispatcher(LoginServlet.pathToFile.getString("listBooks")).forward(request, response);
+                request.getRequestDispatcher(LoginServlet.pathToFile.getString("listFurnitures")).forward(request, response);
                 break;    
 //            case "/descriptionForm":
 //                List<History> listBoughtFurnitures = historyFacade.findAll();

@@ -81,6 +81,7 @@ public class History implements Serializable{
                 + "furniture=" + furniture.getName()
                 + ", buyer=" + buyer.getFirstname()+" "+buyer.getLastname()
                 + ", takeOnDate=" + takeOnDate 
+                + ", returnDate=" + returnDate
                 + '}';
     }
 

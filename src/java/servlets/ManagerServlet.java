@@ -111,10 +111,14 @@ public class ManagerServlet extends HttpServlet {
         
         switch (path) {
             case "/addFurniture":
-                request.setAttribute("activeAddFurniture", "true");
                 List<Cover> listCovers = coverFacade.findAll();
+                List<Text> listTexts = textFacade.findAll();
                 request.setAttribute("listCovers", listCovers);
-                request.getRequestDispatcher(LoginServlet.pathToFile.getString("addFurniture")).forward(request, response);
+                request.setAttribute("listTexts", listTexts);
+                request.setAttribute("activeAddFurniture", "true");
+                request.getRequestDispatcher(
+                        LoginServlet.pathToFile.getString("addFurniture"))
+                        .forward(request, response);
                 break;
             case "/createFurniture":
                 String name = request.getParameter("name");
@@ -251,8 +255,8 @@ public class ManagerServlet extends HttpServlet {
                 
             case "/discountForm":
                 request.setAttribute("activeDiscountForm", "true");
-                List<Furniture> listFurnitures = furnitureFacade.findNotDiscountBook();
-                request.setAttribute("listBooks", listFurnitures);
+                List<Furniture> listFurnitures = furnitureFacade.findNotDiscountFurniture();
+                request.setAttribute("listFurnitures", listFurnitures);
                 request.getRequestDispatcher(LoginServlet
                                 .pathToFile
                                 .getString("discountForm")

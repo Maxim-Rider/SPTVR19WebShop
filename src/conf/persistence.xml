@@ -9,7 +9,8 @@
     <class>entity.Role</class>
     <class>entity.UserRoles</class>
     <class>entity.Cover</class>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <class>entity.Text</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
     </properties>

@@ -145,13 +145,13 @@ public class ManagerServletJson extends HttpServlet {
 
                 break;   
             }
-        furniture = new Furniture(name, color, size, Integer.parseInt(quantity), Integer.parseInt(price));
+        furniture = new Furniture(name, color, size, Integer.parseInt(quantity), Integer.parseInt(price), cover, text);
         furnitureFacade.create(furniture);
         JsonFurnitureBuilder jbb = new JsonFurnitureBuilder();
         JsonObject jsonFurniture = jbb.createJsonFurniture(furniture);
         json=job.add("requestStatus", "true")
-                    .add("info", "Добавлена книга \""+furniture.getName()+"\".")
-                    .add("book", jsonFurniture.toString())
+                    .add("info", "Добавлен товар \""+furniture.getName()+"\".")
+                    .add("furniture", jsonFurniture.toString())
                     .build()
                     .toString();
         response.setContentType("application/json"); 

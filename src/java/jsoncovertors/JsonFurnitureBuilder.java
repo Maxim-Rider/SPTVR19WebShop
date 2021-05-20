@@ -6,6 +6,7 @@
 package jsoncovertors;
 
 import entity.Furniture;
+import java.math.BigDecimal;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -22,6 +23,7 @@ public class JsonFurnitureBuilder {
                 .add("color", furniture.getColor())
                 .add("size", furniture.getSize())
                 .add("price", furniture.getPrice())
+                .add("quantity", furniture.getQuantity())
                 .add("cover", new JsonCoverBuilder().createJsonCover(furniture.getCover()))
                 .add("text", new JsonTextBuilder().createJsonText(furniture.getText()))
                 .add("discount", furniture.getDiscount())
