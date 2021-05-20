@@ -98,11 +98,11 @@ class FurnitureModule{
       let cart = document.createElement('div');
       cart.classList.add('card');
       cart.classList.add('m-2');
-      cart.style.cssText=`max-width: 12rem; max-height: 25rem; border:0`;
+      cart.style.cssText=`max-width: 12rem; max-height: 25rem; border:0; min-height: 30rem; overflow-y:hidden;`;
       cart.innerHTML= '<p class="card-text text-danger w-100 d-flex justify-content-center">&nbsp;</p>';
       let img = document.createElement('img');
       img.classList.add('card-img-top');
-      img.style.cssText=`max-width: 12rem; max-height: 15rem; border-style: solid; border-width: 0.5px; margin-top: -30px;`;
+      img.style.cssText=`max-width: 12rem; max-height: 15rem; min-height:12rem; border-style: solid; border-width: 0.5px; margin-top: -30px;`;
       img.setAttribute('src', `insertFile/${furniture.cover.path}`);
       cart.insertAdjacentElement('beforeEnd',img);
       cart.insertAdjacentHTML('beforeend',
@@ -117,8 +117,8 @@ class FurnitureModule{
                     <br>
                     <b>Цена:</b>  <h7 class="card-text m-0">${furniture.price/100} EUR</h7>
                       <p class="d-inline">
-                        <a href="readFurniture?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-info" style="color:white; margin-top: 5px;">Просмотреть</button></a>
-                        <a href="addToBasket?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-primary" style="color:white; margin-top: 3px;">В корзину</button></a>
+                        <a href="readFurniture?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-info" style="color:white; margin-top: 5px; position: absolute; bottom: 10px; left:15px;">Просмотреть</button></a>           
+                        <a href="addToBasket?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-primary" style="color:white; margin-top: 3px; position: absolute; bottom: 43px; left:15px;">В корзину</button></a>
                       </p>
                     </div>`
                     );
