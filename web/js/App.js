@@ -39,9 +39,15 @@ document.getElementById("showLoginForm").onclick = function (){
 };
 document.getElementById("logout").onclick = function (){
     toogleMenuActive("logout");
-    document.getElementById('info').innerHTML='';
+     document.getElementById('info').innerHTML='&nbsp';
     authModule.logout();
 };
+document.getElementById("basket").onclick = function (){
+
+    document.getElementById('info').innerHTML='&nbsp';
+
+};
+
 
 
 

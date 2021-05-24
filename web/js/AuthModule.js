@@ -24,7 +24,10 @@ class AuthModule{
                 <a class="mx-auto text-center" id="registration-link" href="#registrationForm">Регистрация</a>
               </div>
         </div>`;
-        document.getElementById('btnEnter').addEventListener('click',authModule.auth); 
+        document.getElementById('btnEnter').addEventListener('click',authModule.auth);
+        document.getElementById('password').addEventListener("keyup", function(e){
+          if(e.key === 'Enter')  authModule.auth();
+        }); 
         document.getElementById('registration-link').addEventListener('click',userModule.registration); 
         
     }
@@ -73,12 +76,11 @@ class AuthModule{
       });
       if(response.ok){
         const result = await response.json();
-        if(result.requestStatus){
           sessionStorage.removeItem('token');
           sessionStorage.removeItem('role');
           document.getElementById('info').innerHTML=result.info;
           furnitureModule.printListFurnitures();
-        }
+        
       }
       authModule.toogleMenu();
 
@@ -100,6 +102,8 @@ class AuthModule{
         document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
+        document.getElementById("basket").style.display = 'none';
+
       }else if(role==="BUYER"){
         document.getElementById("listFurnitures").style.display = 'block';
         document.getElementById("showLoginForm").style.display = 'none';
@@ -109,6 +113,8 @@ class AuthModule{
         document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
+        document.getElementById("basket").style.display = 'block';
+
       }else if(role==="MANAGER"){
         document.getElementById("listFurnitures").style.display = 'block';
         document.getElementById("showLoginForm").style.display = 'none';
@@ -118,6 +124,8 @@ class AuthModule{
         document.getElementById("discountForm").style.display = 'block';
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
+        document.getElementById("basket").style.display = 'block';
+
       }else if(role==="ADMIN"){
         document.getElementById("listFurnitures").style.display = 'block';
         document.getElementById("showLoginForm").style.display = 'none';
@@ -127,6 +135,8 @@ class AuthModule{
         document.getElementById("discountForm").style.display = 'block';
         document.getElementById("listBuyers").style.display = 'block';
         document.getElementById("adminPanel").style.display = 'block';
+        document.getElementById("basket").style.display = 'block';
+
       }
     
     }
