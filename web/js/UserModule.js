@@ -145,6 +145,7 @@ class UserModule{
             },
             body: JSON.stringify(user)
         })
+        var result = await response.json();
         if(response.ok){
           const result = await response.json();
           document.getElementById('info').innerHTML=result.info;
@@ -355,6 +356,57 @@ class UserModule{
       }else{
         document.getElementById('info').innerHTML='Ошибка серевера';
       }
+    }
+    
+    async showProfile(){
+        document.getElementById('context').innerHTML=
+           `<div class="text-center justify-content-md-center m-auto">  
+                <h3 class="w-100 my-5 text-center"> Профиль </h3> 
+                <div class="col-md mb-3 mx-auto"></div>
+                <div class="col-md-4 justify-content-md-center mx-auto ml">
+                    <ul class="list-group list-group-horizontal">            
+                        <li class="list-group-item disabled">Логин</li>
+                        <li id='login' class="list-group-item "></li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal">            
+                        <li class="list-group-item disabled">Имя</li>
+                        <li id='firstname' class="list-group-item "></li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal">            
+                        <li class="list-group-item disabled">Фамилия</li>
+                        <li id='lastname' class="list-group-item"></li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal">            
+                        <li class="list-group-item disabled">Телефон</li>
+                        <li id='phone' class="list-group-item "></li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal">            
+                        <li class="list-group-item disabled">Деньги</li>
+                        <li id='wallet' class="list-group-item"></li>
+                    </ul>
+                </div> 
+                <div class="col-md-auto mb-3 mx-auto"></div>
+            </div>`;
+    
+            const response = await fetch('showProfileJson',{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json;charset:utf8'
+                }});
+            
+            var result = await response.json();
+            if (response.ok){
+              console.log("Request status: "+result.requestStatus);
+            } else {
+              console.log("Ошибка получения данных");
+            }
+
+            document.getElementById('firstname').innerHTML = result.firstname;
+            document.getElementById('lastname').innerHTML = result.lastname;
+            document.getElementById('login').innerHTML = result.login;
+            document.getElementById('phone').innerHTML = result.phone;
+            document.getElementById('wallet').innerHTML = result.wallet + ' EUR';
+    
     }
 }
 const userModule = new UserModule();

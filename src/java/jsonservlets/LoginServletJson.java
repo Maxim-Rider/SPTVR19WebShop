@@ -40,6 +40,7 @@ import javax.json.JsonReader;
     "/loginJson",
     "/logoutJson",
     "/listFurnituresJson",
+    "/showProfileJson",
     
 })
 public class LoginServletJson extends HttpServlet {
@@ -164,6 +165,24 @@ public class LoginServletJson extends HttpServlet {
                     jab.add(new JsonFurnitureBuilder().createJsonFurniture(furniture));
                 });
                 json = jab.build().toString();
+                break;
+            case "/showProfileJson":
+//                JsonReader jsonBuyer = Json.createReader(request.getInputStream());
+//                jsonObject = jsonBuyer.readObject();
+                session = request.getSession(false);
+                user = (User)session.getAttribute("user");
+
+                job = Json.createObjectBuilder();
+                
+                json = job.add("requestStatus", "true")
+                        .add("firstname", user.getBuyer().getFirstname())
+                        .add("lastname", user.getBuyer().getLastname())
+                        .add("wallet", user.getBuyer().getWallet())
+                        .add("phone", user.getBuyer().getPhone())
+                        .add("login", user.getLogin())
+                        .build()
+                        .toString();
+  
                 break;
         }
         if(json == null && "".equals(json)){

@@ -57,6 +57,7 @@
               <a class="nav-link <c:if test="${activeAddFurniture eq true}">active</c:if>" href="addFurniture">Добавить товар</a>
               <a class="nav-link <c:if test="${activeListBuyers eq true}">active</c:if>" id="listBuyers" href="listBuyers">Список покупателей</a>
               <a class="nav-link <c:if test="${activeAdminPanel eq true}">active</c:if>" id="adminPanel" href="adminPanel">Панель администратора</a>
+              <a class="nav-link <c:if test="${activeShowProfile eq true}">active</c:if>"href="showProfile">Профиль</a>
               <a class="nav-link <c:if test="${activeLogout eq true}">active</c:if>" id="logout" href="logout">Выйти</a>
               
           </c:when>
@@ -65,13 +66,16 @@
               <a class="nav-link <c:if test="${activeDiscountForms}">active</c:if>" href="discountForm">Скидка</a>
               <!--<a class="nav-link <c:if test="${activePurchaseFurnitureForm eq true}">active</c:if>" href="purchaseFurnitureForm">Список купленных товаров</a>-->
               <a class="nav-link <c:if test="${activeAddFurniture eq true}">active</c:if>" href="addFurniture">Добавить товар</a>
+              <a class="nav-link <c:if test="${activeShowProfile eq true}">active</c:if>"href="showProfile">Профиль</a> 
               <a class="nav-link <c:if test="${activeLogout eq true}">active</c:if>" href="logout">Выйти</a>
           </c:when>
               
           <c:when test="${role eq 'BUYER'}">
               <a class="nav-link <c:if test="${activeListFurnitures eq true}">active</c:if>" aria-current="page" href="listFurnitures">Список товара</a>
               <a class="nav-link <c:if test="${activePurchaseFurnitureForm eq true}">active</c:if>" href="purchaseFurnitureForm">Список купленных товаров</a>
+              <a class="nav-link <c:if test="${activeShowProfile eq true}">active</c:if>"href="showProfile">Профиль</a> 
               <a class="nav-link <c:if test="${activeLogout eq true}">active</c:if>" href="logout">Выйти</a>
+
           </c:when>
           
           <c:otherwise>

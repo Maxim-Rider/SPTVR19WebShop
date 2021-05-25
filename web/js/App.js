@@ -49,6 +49,10 @@ document.getElementById("basket").onclick = function (){
     document.getElementById('info').innerHTML='&nbsp';
 
 };
+document.getElementById("showProfile").onclick = function (){
+    toogleMenuActive("showProfile");
+    userModule.showProfile();
+};
 
 
 

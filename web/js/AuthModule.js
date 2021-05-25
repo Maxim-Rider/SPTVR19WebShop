@@ -45,8 +45,8 @@ class AuthModule{
          },
          body: JSON.stringify(credential)
        });
+       const result = await response.json();
        if(response.ok){
-        const result = await response.json();
         document.getElementById('info').innerHTML=result.info;
         console.log("Request status: "+result.requestStatus);
         document.getElementById('context').innerHTML='';
@@ -103,6 +103,8 @@ class AuthModule{
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
         document.getElementById("basket").style.display = 'none';
+        document.getElementById("showProfile").style.display = 'none';
+
 
       }else if(role==="BUYER"){
         document.getElementById("listFurnitures").style.display = 'block';
@@ -114,6 +116,7 @@ class AuthModule{
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
         document.getElementById("basket").style.display = 'block';
+        document.getElementById("showProfile").style.display = 'block';
 
       }else if(role==="MANAGER"){
         document.getElementById("listFurnitures").style.display = 'block';
@@ -125,6 +128,7 @@ class AuthModule{
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
         document.getElementById("basket").style.display = 'block';
+        document.getElementById("showProfile").style.display = 'block';
 
       }else if(role==="ADMIN"){
         document.getElementById("listFurnitures").style.display = 'block';
@@ -136,6 +140,7 @@ class AuthModule{
         document.getElementById("listBuyers").style.display = 'block';
         document.getElementById("adminPanel").style.display = 'block';
         document.getElementById("basket").style.display = 'block';
+        document.getElementById("showProfile").style.display = 'block';
 
       }
     
