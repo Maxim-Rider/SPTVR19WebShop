@@ -115,7 +115,7 @@ class FurnitureModule{
                     <br>
                     <b>Кол-во:</b>  <h7 class="card-text m-0">${furniture.quantity}</h7>
                     <br>
-                    <b>Цена:</b>  <h7 class="card-text m-0">${furniture.price/100} EUR</h7>
+                    <b>Цена:</b>  <h7 class="card-text m-0">${furniture.price} EUR</h7>
                       <p class="d-inline">
                         <a href="readFurniture?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-info" style="color:white; margin-top: 5px; position: absolute; bottom: 10px; left:15px;">Просмотреть</button></a>           
                         <a href="addToBasket?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-primary" style="color:white; margin-top: 3px; position: absolute; bottom: 43px; left:15px;">В корзину</button></a>

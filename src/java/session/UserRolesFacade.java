@@ -60,12 +60,7 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
         }
     }
 
-    public void setRoleToUser(Role r, User u) {
-        if(!this.isRole(r.getRoleName(), u)){
-            UserRoles ur = new UserRoles(u, r);
-            this.create(ur);
-        }
-    }
+    
     public void removeRoleFromUser(Role r, User u){
         if(this.isRole(r.getRoleName(), u)){
             em.createQuery("DELETE FROM UserRoles ur WHERE ur.user = :user AND ur.role = :role")

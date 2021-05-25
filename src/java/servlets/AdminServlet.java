@@ -38,7 +38,7 @@ import session.RoleFacade;
 @WebServlet(name = "AdminServlet", urlPatterns = {
     "/listBuyers",
     "/adminPanel",
-    "/setRoleToUser",
+    "/setRole",
         
 
 })
@@ -109,38 +109,29 @@ public class AdminServlet extends HttpServlet {
                 request.setAttribute("usersMap", usersMap);
                 request.getRequestDispatcher(LoginServlet.pathToFile.getString("adminPanel")).forward(request, response);
                 break;
-            case "/setRoleToUser":
+            case "/setRole":
                 String roleId = request.getParameter("roleId");
                 String userId = request.getParameter("userId");
                 String changeRole = request.getParameter("changeRole");
-                if("".equals(roleId) || roleId == null
-                        || "".equals(userId) || userId == null){
-                    request.setAttribute("roleId", roleId);
+                if("".equals(userId) || userId == null
+                        || "".equals(roleId) || roleId == null){
                     request.setAttribute("userId", userId);
-                    request.setAttribute("info", "Выберите все поля");
+                    request.setAttribute("roleId", roleId);
+                    request.setAttribute("info", "Заполните все поля");
                     request.getRequestDispatcher("/adminPanel").forward(request, response);
+                    break;
                 }
-                Role r = roleFacade.find(Long.parseLong(roleId));
-                User u = userFacade.find(Long.parseLong(userId));
+                user = userFacade.find(Long.parseLong(userId));
+                Role role = roleFacade.find(Long.parseLong(roleId));
+                UserRoles userRoles = new UserRoles(user, role);
                 if(!"admin".equals(user.getLogin())){
-                    userRolesFacade.setRoleToUser(r, u);
+                    userRolesFacade.setNewRole(userRoles);
                     request.setAttribute("info", "Роль изменена");
                 }else{
                     request.setAttribute("userId", userId);
                     request.setAttribute("roleId", roleId);
                     request.setAttribute("info", "Изменить роль невозможно");
                 }
-//                if("0".equals(changeRole)){
-//                    userRolesFacade.setRoleToUser(r,u);
-//                    request.setAttribute("info", "Роль изменена");
-//                }else if("1".equals(changeRole)){
-//                    userRolesFacade.removeRoleFromUser(r,u);
-//                    request.setAttribute("info", "Роль удалена");
-//                }else {
-//                    request.setAttribute("userId", userId);
-//                    request.setAttribute("roleId", roleId);
-//                    request.setAttribute("info", "Изменить роль невозможно");
-//                }
                 request.getRequestDispatcher("/adminPanel").forward(request, response);
                 break;
         }

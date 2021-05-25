@@ -63,7 +63,7 @@
           <p class="card-text m-0">${furniture.size}</p>
           <p class="card-text m-0">${furniture.quantity}</p>
           <c:if test="${furniture.discount <= 0 || furniture.discountDate > today}">
-              <p class="card-text m-0">${furniture.price/100} EUR</p>
+              <p class="card-text m-0">${furniture.price} EUR</p>
           </c:if>
           <c:if test="${furniture.discount > 0 && furniture.discountDate < today}">
               <p class="card-text m-0 text-danger"><span class="text-decoration-line-through text-black-50">${furniture.price/100}</span> ${(furniture.price - furniture.price*furniture.discount/100)/100} EUR</p>

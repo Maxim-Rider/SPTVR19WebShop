@@ -40,7 +40,7 @@
                         <td>${entry.key.id}</td>
                         <td>${entry.key.buyer.firstname}</td>
                         <td>${entry.key.buyer.lastname}</td>
-                        <td>${entry.key.buyer.wallet/100}</td>
+                        <td>${entry.key.buyer.wallet}</td>
                         <td>${entry.key.login}</td>
                         <td><c:if test="${entry.value[0] ne ''}">${entry.value[0]}</c:if></td>
                     </tr>

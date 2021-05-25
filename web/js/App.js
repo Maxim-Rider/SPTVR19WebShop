@@ -7,7 +7,7 @@ document.getElementById("index").onclick = function (){
     document.getElementById('info').innerHTML='&nbsp;';
     furnitureModule.printListFurnitures();
     
-}
+};
 document.getElementById("addFurniture").onclick = function (){
     toogleMenuActive("addFurniture");
     document.getElementById('info').innerHTML='&nbsp;';
@@ -31,6 +31,8 @@ document.getElementById("listBuyers").onclick = function (){
 };
 document.getElementById("adminPanel").onclick = function (){
     toogleMenuActive("adminPanel");
+    document.getElementById('info').innerHTML='&nbsp;';
+    userModule.printAdminPanel();
 };
 document.getElementById("showLoginForm").onclick = function (){
     toogleMenuActive("showLoginForm");

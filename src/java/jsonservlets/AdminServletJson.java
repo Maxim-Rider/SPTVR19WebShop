@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import jsoncovertors.JsonUserBuilder;
 import servlets.LoginServlet;
+import session.RoleFacade;
 import session.BuyerFacade;
 import session.FurnitureFacade;
 import session.UserFacade;
@@ -43,12 +44,18 @@ import tools.EncryptPassword;
   "/listUsersJson",
   "/getUserJson",
   "/editUserJson",
+  "/listUsersWithRoleJson",
+  "/listRolesJson",
+  "/setRoleToUserJson",
+
 })
 public class AdminServletJson extends HttpServlet {
     @EJB private UserFacade userFacade;
     @EJB private UserRolesFacade userRolesFacade;
     @EJB private FurnitureFacade furnitureFacade;
     @EJB private BuyerFacade buyerFacade;
+    @EJB private RoleFacade roleFacade;
+
     
     @Inject EncryptPassword ep;
 
@@ -57,12 +64,45 @@ public class AdminServletJson extends HttpServlet {
           throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
     request.setCharacterEncoding("UTF-8");
-    HttpSession session = request.getSession(false);
     String uploadFolder = LoginServlet.pathToFile.getString("dir");
     String json = null;
-//    JsonBuyer jsonBuyer = Json.createBuyer(request.getBuyer());
     JsonObjectBuilder job = Json.createObjectBuilder();
     JsonObject jsonObject = null;
+    HttpSession session = request.getSession(false);
+        if(session == null){
+            json=job.add("requestStatus", "false")
+                    .add("info", "Авторизуйтесь")
+                    .build()
+                    .toString();
+            try (PrintWriter out = response.getWriter()) {
+                out.println(json);
+            }
+            return;
+        }
+        User user = (User) session.getAttribute("user");
+        if(user == null){
+            json=job.add("requestStatus", "false")
+                    .add("info", "Авторизуйтесь")
+                    .build()
+                    .toString();
+
+            try (PrintWriter out = response.getWriter()) {
+                out.println(json);
+            }
+            return;
+        }
+        boolean isRole = userRolesFacade.isRole("ADMIN",user);
+        if(!isRole){
+            json=job.add("requestStatus", "false")
+                    .add("info", "У вас недостаточно прав")
+                    .build()
+                    .toString();
+
+            try (PrintWriter out = response.getWriter()) {
+                out.println(json);
+            }
+            return;
+        }
     String path = request.getServletPath();
     switch (path) {
         case "/listUsersJson":
@@ -75,10 +115,10 @@ public class AdminServletJson extends HttpServlet {
                 }]
             */
             JsonArrayBuilder jab = Json.createArrayBuilder();
-            for(User user : listUsers){
-                String role = userRolesFacade.getTopRoleForUser(user);
+            for(User u : listUsers){
+                String role = userRolesFacade.getTopRoleForUser(u);
                 jab.add(Json.createObjectBuilder()
-                    .add("user", new JsonUserBuilder().createJsonUser(user))
+                    .add("user", new JsonUserBuilder().createJsonUser(u))
                     .add("role",role).build()
                 );
             }
@@ -121,12 +161,19 @@ public class AdminServletJson extends HttpServlet {
                 break;
             }
             editUser = userFacade.find(Long.parseLong(userId));
+            if("admin".equals(editUser.getLogin()) && !"admin".equals(user.getLogin())){
+                json=job.add("requestStatus", "false")
+                    .add("info", "Изменения невозможны")
+                    .build()
+                    .toString();
+                break;
+            }
             Buyer editBuyer = editUser.getBuyer();
             editBuyer.setFirstname(firstname);
             editBuyer.setLastname(lastname);
             editBuyer.setWallet(wallet);
             editBuyer.setPhone(phone);
-            editUser.setLogin(login);
+           // editUser.setLogin(login);
             if(password != null && !password.isEmpty()){
                 password = ep.createHash(password, editUser.getSalt());
                 editUser.setPassword(password);
@@ -138,6 +185,39 @@ public class AdminServletJson extends HttpServlet {
                       .add("userId", editUser.getId().toString())
                       .build()
                       .toString();
+            break;
+            case "/listUsersWithRoleJson":
+            listUsers = userFacade.findAll();
+            jab = Json.createArrayBuilder();
+            job=Json.createObjectBuilder();
+            for(User u: listUsers){
+                String role = userRolesFacade.getTopRoleForUser(u);
+                job.add("user", new JsonUserBuilder().createJsonUser(u));
+                job.add("role", role);
+                jab.add(job.build());
+            }
+            json = jab.build().toString();
+            break;
+        case "/listRolesJson":
+            List<Role> listRoles = roleFacade.findAll();
+            jab = Json.createArrayBuilder();
+            job = Json.createObjectBuilder();
+
+            for(Role r : listRoles){
+               job.add("id", r.getId())
+                       .add("roleName", r.getRoleName());
+               jab.add(job.build());
+            }
+            json = jab.build().toString();
+            break;
+        case "/setRoleToUserJson":
+            jsonBuyer = Json.createReader(request.getInputStream());
+            jsonObject = jsonBuyer.readObject();
+            long LuserId = jsonObject.getInt("userId");
+            long LroleId = jsonObject.getInt("roleId");
+            Role role = roleFacade.find(LroleId);
+            userRolesFacade.setRole(role.getRoleName(), userFacade.find(LuserId));
+            json = "{\"info\":\"Ok\"}";
             break;
     }
     if(json == null && "".equals(json)){
