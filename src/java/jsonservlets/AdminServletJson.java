@@ -186,7 +186,7 @@ public class AdminServletJson extends HttpServlet {
                       .build()
                       .toString();
             break;
-            case "/listUsersWithRoleJson":
+        case "/listUsersWithRoleJson":
             listUsers = userFacade.findAll();
             jab = Json.createArrayBuilder();
             job=Json.createObjectBuilder();
@@ -213,10 +213,10 @@ public class AdminServletJson extends HttpServlet {
         case "/setRoleToUserJson":
             jsonBuyer = Json.createReader(request.getInputStream());
             jsonObject = jsonBuyer.readObject();
-            long LuserId = jsonObject.getInt("userId");
-            long LroleId = jsonObject.getInt("roleId");
-            Role role = roleFacade.find(LroleId);
-            userRolesFacade.setRole(role.getRoleName(), userFacade.find(LuserId));
+            String LuserId = jsonObject.getString("userId");
+            String LroleId = jsonObject.getString("roleId");
+            Role role = roleFacade.find(Long.parseLong(LroleId));
+            userRolesFacade.setRole(role.getRoleName(), userFacade.find(Long.parseLong(LuserId)));
             json = "{\"info\":\"Ok\"}";
             break;
     }

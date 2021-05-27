@@ -61,14 +61,14 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
     }
 
     
-    public void removeRoleFromUser(Role r, User u){
-        if(this.isRole(r.getRoleName(), u)){
-            em.createQuery("DELETE FROM UserRoles ur WHERE ur.user = :user AND ur.role = :role")
-                    .setParameter("user", u)
-                    .setParameter("role", r)
-                    .executeUpdate();
-        }
-    }
+//    public void removeRoleFromUser(Role r, User u){
+//        if(this.isRole(r.getRoleName(), u)){
+//            em.createQuery("DELETE FROM UserRoles ur WHERE ur.user = :user AND ur.role = :role")
+//                    .setParameter("user", u)
+//                    .setParameter("role", r)
+//                    .executeUpdate();
+//        }
+//    }
     public String getTopRoleForUser(User user) {
         if(user == null) return "";
         List<UserRoles> listUserRoles = em.createQuery("SELECT userRoles FROM UserRoles userRoles WHERE userRoles.user = :user")

@@ -45,8 +45,8 @@ class AuthModule{
          },
          body: JSON.stringify(credential)
        });
-       const result = await response.json();
        if(response.ok){
+        const result = await response.json();
         document.getElementById('info').innerHTML=result.info;
         console.log("Request status: "+result.requestStatus);
         document.getElementById('context').innerHTML='';

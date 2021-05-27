@@ -19,9 +19,9 @@ class UserModule{
                         
                     </select>
                   </p>
-                  <p><input id="btnSetRole" class="btn btn-primary w-100" type="submit" value="Назначить роль пользователю"></p>
+                  <p><input id="btnSetRole" class="btn btn-primary w-100" type="button" value="Назначить роль пользователю"></p>
               </form>`;
-      document.getElementById('form1').addEventListener('onsubmit', userModule.setRoleToUser);        
+      document.getElementById('btnSetRole').addEventListener('click', userModule.setRoleToUser);        
       const listUsersWithRole = await userModule.getListUsersWithRole();
       const selectUserIdOptions = document.getElementById('userId');
       for(let user of listUsersWithRole){
@@ -63,14 +63,15 @@ class UserModule{
         return null;
       }
     }
-    setRoleToUser(){
+    async setRoleToUser(){
+        
       const userId = document.getElementById('userId').value;
       const roleId = document.getElementById('roleId').value;
       const data ={
         'userId':userId,
         'roleId':roleId
       }
-      let response = fetch('setRoleToUserJson',{
+      let response = await fetch('setRoleToUserJson',{
         method: 'POST',
         headers:{
           'Content-Type': 'aplication/json;charser=utf-8'
@@ -145,7 +146,6 @@ class UserModule{
             },
             body: JSON.stringify(user)
         })
-        var result = await response.json();
         if(response.ok){
           const result = await response.json();
           document.getElementById('info').innerHTML=result.info;
@@ -405,7 +405,7 @@ class UserModule{
             document.getElementById('lastname').innerHTML = result.lastname;
             document.getElementById('login').innerHTML = result.login;
             document.getElementById('phone').innerHTML = result.phone;
-            document.getElementById('wallet').innerHTML = result.wallet + ' EUR';
+            document.getElementById('wallet').innerHTML = result.wallet/100 + ' EUR';
     
     }
 }
