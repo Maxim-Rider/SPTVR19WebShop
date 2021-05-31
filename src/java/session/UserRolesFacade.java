@@ -26,7 +26,7 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
     private EntityManager em;
 
     @EJB private RoleFacade roleFacade;
-    @EJB private UserRolesFacade userRolesFacade;
+   
 
         
     @Override
@@ -132,7 +132,7 @@ public class UserRolesFacade extends AbstractFacade<UserRoles> {
     public void setRole(String roleName, User user) {
         Role role = roleFacade.findByName(roleName);
         UserRoles ur = new UserRoles(user, role);
-        userRolesFacade.create(ur);
+        this.create(ur);
     }
 
 }

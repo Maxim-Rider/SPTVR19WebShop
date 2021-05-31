@@ -111,7 +111,7 @@ class AuthModule{
         document.getElementById("showLoginForm").style.display = 'none';
         document.getElementById("logout").style.display = 'block';
         document.getElementById("addFurniture").style.display = 'none';
-        document.getElementById("purchasedFurnitures").style.display = 'block';
+        document.getElementById("purchasedFurnitures").style.display = 'none';
         document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
@@ -123,8 +123,8 @@ class AuthModule{
         document.getElementById("showLoginForm").style.display = 'none';
         document.getElementById("logout").style.display = 'block';
         document.getElementById("addFurniture").style.display = 'block';
-        document.getElementById("purchasedFurnitures").style.display = 'block';
-        document.getElementById("discountForm").style.display = 'block';
+        document.getElementById("purchasedFurnitures").style.display = 'none';
+        document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
         document.getElementById("basket").style.display = 'block';
@@ -135,8 +135,8 @@ class AuthModule{
         document.getElementById("showLoginForm").style.display = 'none';
         document.getElementById("logout").style.display = 'block';
         document.getElementById("addFurniture").style.display = 'block';
-        document.getElementById("purchasedFurnitures").style.display = 'block';
-        document.getElementById("discountForm").style.display = 'block';
+        document.getElementById("purchasedFurnitures").style.display = 'none';
+        document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'block';
         document.getElementById("adminPanel").style.display = 'block';
         document.getElementById("basket").style.display = 'block';

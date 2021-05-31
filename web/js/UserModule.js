@@ -1,6 +1,6 @@
 import {authModule} from './AuthModule.js';
 class UserModule{
-    async printAdminPanel(){
+    async printAdminPanel(){     
       document.getElementById('context').innerHTML=
       `<h3  class="w-100 my-5 text-center">Панель администратора</h3>
       <div class="w-100 d-flex justify-content-center m-2">
@@ -21,11 +21,12 @@ class UserModule{
                   </p>
                   <p><input id="btnSetRole" class="btn btn-primary w-100" type="button" value="Назначить роль пользователю"></p>
               </form>`;
-      document.getElementById('btnSetRole').addEventListener('click', userModule.setRoleToUser);        
+      document.getElementById('info').innerHTML='';
+      document.getElementById('btnSetRole').addEventListener('click', userModule.setRoleToUser);
       const listUsersWithRole = await userModule.getListUsersWithRole();
       const selectUserIdOptions = document.getElementById('userId');
-      for(let user of listUsersWithRole){
-        selectUserIdOptions.add(new Option(user.user.login+', роль: '+user.role, user.id));
+      for(let entry of listUsersWithRole){
+        selectUserIdOptions.add(new Option(entry.user.login+', роль: '+entry.role, entry.user.id));
       }
       const listRoles = await userModule.getListRoles();
       const selectRoleIdOptions = document.getElementById('roleId');
@@ -37,7 +38,7 @@ class UserModule{
       let response = await fetch('listUsersWithRoleJson',{
         method: 'GET',
         headers:{
-          'Content-Type': 'aplication/json;charser=utf-8'
+          'Content-Type': 'application/json;charser=utf-8'
         }
       })
       if(response.ok){
@@ -52,7 +53,7 @@ class UserModule{
       let response = await fetch('listRolesJson',{
         method: 'GET',
         headers:{
-          'Content-Type': 'aplication/json;charser=utf-8'
+          'Content-Type': 'application/json;charser=utf-8'
         }
       })
       if(response.ok){
@@ -64,7 +65,6 @@ class UserModule{
       }
     }
     async setRoleToUser(){
-        
       const userId = document.getElementById('userId').value;
       const roleId = document.getElementById('roleId').value;
       const data ={
@@ -74,10 +74,17 @@ class UserModule{
       let response = await fetch('setRoleToUserJson',{
         method: 'POST',
         headers:{
-          'Content-Type': 'aplication/json;charser=utf-8'
+          'Content-Type': 'application/json;charser=utf-8'
         },
         body: JSON.stringify(data)
       })
+      if(response.ok){
+        let result = await response.json();
+        document.getElementById('info').innerHTML=result.info;
+      }else{
+        document.getElementById('info').innerHTML="Ошибка сервера";
+        return null;
+      }
     }
     
     registration(){

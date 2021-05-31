@@ -213,11 +213,23 @@ public class AdminServletJson extends HttpServlet {
         case "/setRoleToUserJson":
             jsonBuyer = Json.createReader(request.getInputStream());
             jsonObject = jsonBuyer.readObject();
-            String LuserId = jsonObject.getString("userId");
-            String LroleId = jsonObject.getString("roleId");
-            Role role = roleFacade.find(Long.parseLong(LroleId));
-            userRolesFacade.setRole(role.getRoleName(), userFacade.find(Long.parseLong(LuserId)));
-            json = "{\"info\":\"Ok\"}";
+            String sUserId = jsonObject.getString("userId");
+            String sRoleId = jsonObject.getString("roleId");
+            Role role = roleFacade.find(Long.parseLong(sRoleId));
+            editUser = userFacade.find(Long.parseLong(sUserId));
+            if("admin".equals(editUser.getLogin()) && !"admin".equals(user.getLogin())){
+                json=job.add("requestStatus", "false")
+                    .add("info", "Изменения невозможны")
+                    .build()
+                    .toString();
+                break;
+            }
+            userRolesFacade.setRole(role.getRoleName(), editUser);
+            json = job.add("requestStatus", "true")
+                      .add("info", "Роль обновлена")
+                      .build()
+                      .toString();
+           
             break;
     }
     if(json == null && "".equals(json)){
