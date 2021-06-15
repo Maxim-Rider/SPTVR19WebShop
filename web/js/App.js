@@ -2,10 +2,14 @@ import {authModule} from './AuthModule.js';
 import {furnitureModule} from './FurnitureModule.js';
 import {userModule } from './UserModule.js';
 
+document.getElementById("buyFurnitureForm").onclick = function (){
+    toogleMenuActive("buyFurnitureForm");
+    furnitureModule.printBuyFurnitureForm();
+};
 document.getElementById("index").onclick = function (){
     toogleMenuActive("index");
     document.getElementById('info').innerHTML='&nbsp;';
-    furnitureModule.printListFurnitures();
+    furnitureModule.printBuyFurnitureForm(); 
     
 };
 document.getElementById("addFurniture").onclick = function (){
@@ -18,12 +22,7 @@ document.getElementById("listFurnitures").onclick = function (){
     document.getElementById('info').innerHTML='&nbsp;';
     furnitureModule.printListFurnitures();
 };
-document.getElementById("purchasedFurnitures").onclick = function (){
-    toogleMenuActive("purchasedFurnitures");
-};
-document.getElementById("discountForm").onclick = function (){
-    toogleMenuActive("discountForm");
-};
+
 document.getElementById("listBuyers").onclick = function (){
     toogleMenuActive("listBuyers");
     document.getElementById('info').innerHTML='&nbsp;';
@@ -44,11 +43,7 @@ document.getElementById("logout").onclick = function (){
      document.getElementById('info').innerHTML='&nbsp';
     authModule.logout();
 };
-document.getElementById("basket").onclick = function (){
 
-    document.getElementById('info').innerHTML='&nbsp';
-
-};
 document.getElementById("showProfile").onclick = function (){
     toogleMenuActive("showProfile");
     userModule.showProfile();
@@ -57,7 +52,7 @@ document.getElementById("showProfile").onclick = function (){
 
 
 
-furnitureModule.printListFurnitures();
+furnitureModule.printBuyFurnitureForm();
 authModule.toogleMenu();
 
 function toogleMenuActive(elementId){

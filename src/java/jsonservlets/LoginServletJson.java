@@ -7,9 +7,12 @@ package jsonservlets;
 
 import entity.Furniture;
 import entity.Buyer;
+import entity.History;
 import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -30,6 +33,8 @@ import session.UserFacade;
 import session.UserRolesFacade;
 import tools.EncryptPassword;
 import javax.json.JsonReader;
+import session.HistoryFacade;
+
 
 /**
  *
@@ -41,14 +46,16 @@ import javax.json.JsonReader;
     "/logoutJson",
     "/listFurnituresJson",
     "/showProfileJson",
-    
+    "/buyFurnitureJson",
+    "/printBuyFurnitureFormJson",
 })
 public class LoginServletJson extends HttpServlet {
     @EJB UserFacade userFacade;
     @EJB FurnitureFacade furnitureFacade;
     @EJB BuyerFacade buyerFacade;
     @EJB UserRolesFacade userRolesFacade;
-    
+    @EJB HistoryFacade historyFacade;
+
     @Inject EncryptPassword encryptPassword;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -67,6 +74,7 @@ public class LoginServletJson extends HttpServlet {
         JsonReader jsonReader = Json.createReader(request.getReader());
         JsonObjectBuilder job = Json.createObjectBuilder();
         String path = request.getServletPath();
+        JsonArrayBuilder jab = Json.createArrayBuilder();
         switch (path) {
             case "/createUserJson":
                 JsonObject jsonObject = jsonReader.readObject();
@@ -158,17 +166,25 @@ public class LoginServletJson extends HttpServlet {
                         .toString();
                 }
                 break;
-            case "/listFurnituresJson":
+            case "/printBuyFurnitureFormJson":
                 List<Furniture> listFurnitures = furnitureFacade.findAll();
-                JsonArrayBuilder jab = Json.createArrayBuilder();
+               
+                if (listFurnitures.isEmpty()) {
+                    json = job.add("requestStatus", "false")
+                        .add("info", "Товаров сейчас нет!")
+                        .build()
+                        .toString();      
+                    break;
+                }
+                
                 listFurnitures.forEach((furniture) -> {
                     jab.add(new JsonFurnitureBuilder().createJsonFurniture(furniture));
                 });
                 json = jab.build().toString();
                 break;
             case "/showProfileJson":
-//                JsonReader jsonBuyer = Json.createReader(request.getInputStream());
-//                jsonObject = jsonBuyer.readObject();
+                //jsonObject = jsonReader.readObject();
+                
                 session = request.getSession(false);
                 user = (User)session.getAttribute("user");
 
@@ -184,6 +200,55 @@ public class LoginServletJson extends HttpServlet {
                         .toString();
   
                 break;
+            case "/buyFurnitureJson":              
+                job = Json.createObjectBuilder();
+                session = request.getSession(false);
+                user = (User)session.getAttribute("user");
+                String buyerId = user.getBuyer().getId().toString();
+                buyer = buyerFacade.find(Long.parseLong(buyerId));
+                jsonObject = jsonReader.readObject();
+                String furnitureId = jsonObject.getString("furnitureId", "");
+                
+                Furniture furniture = furnitureFacade.find(Long.parseLong(furnitureId));
+
+                int buy_quantity = Integer.parseInt(jsonObject.getString("buy_quantity",""));
+               
+
+                if (buyer.getWallet() < furniture.getPrice()) {
+                    json=job.add("requestStatus", "false")
+                        .add("info", "У Вас недостаточно денег!")
+                        .build()
+                       .toString();
+                    break;   
+                }
+
+                if (buy_quantity > furniture.getQuantity()) {
+                    json=job.add("requestStatus", "false")
+                        .add("info", "На складе нет столько товаров!")
+                        .build()
+                       .toString();
+                    break;                       
+                } else {
+                    furniture.setQuantity(furniture.getQuantity() - buy_quantity);               
+                }
+
+
+                buyer.setWallet(buyer.getWallet() - furniture.getPrice()*buy_quantity);
+                buyer.getListFurnitures().add(furniture);
+                buyerFacade.edit(buyer);
+                userFacade.edit(user);
+                user = userFacade.findByLogin(user.getLogin());
+                session.setAttribute("user", user);
+                session.setAttribute("upuser", session.getAttribute("user").toString()); 
+
+                History history = new History(furniture, buyer, new GregorianCalendar().getTime(), null);
+                historyFacade.create(history);
+                furnitureFacade.edit(furniture);
+                json=job.add("requestStatus", "true")
+                        .add("info", "Товар успешно куплен! ( " + furniture.getName() + " x" + buy_quantity + " )")
+                        .build()
+                       .toString();
+                break;                
         }
         if(json == null && "".equals(json)){
             json=job.add("requestStatus", "false")

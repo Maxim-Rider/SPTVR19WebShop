@@ -292,7 +292,7 @@ class UserModule{
         let result = await response.json();
         document.getElementById('info').innerHTML=result.info;
         let user = result.user;
-        let wallet = user.buyer.wallet/100;
+        let wallet = user.buyer.wallet;
         document.getElementById('context').innerHTML=
       `<h3 class="w-100 my-5 text-center">Редактирование профиля пользователя</h3>
         <div class="w-100 d-flex justify-content-center m-2">
@@ -311,7 +311,7 @@ class UserModule{
                     <input type="text" id="phone" class="form-control my-2 g-2" placeholder="Телефон" aria-label="Телефон" value="${user.buyer.phone}">
                   </div>
                   <div class="col">
-                    <input type="text" id="wallet" class="form-control my-2 g-2" placeholder="Деньги" aria-label="Деньги" value="${wallet}">
+                    <input type="text" id="wallet" class="form-control my-2 g-2" placeholder="Деньги" aria-label="Деньги" value="${user.buyer.wallet/100}">
                   </div>
                 </div>
                 <div class="row">
@@ -412,7 +412,7 @@ class UserModule{
             document.getElementById('lastname').innerHTML = result.lastname;
             document.getElementById('login').innerHTML = result.login;
             document.getElementById('phone').innerHTML = result.phone;
-            document.getElementById('wallet').innerHTML = result.wallet/100 + ' EUR';
+            document.getElementById('wallet').innerHTML = result.wallet + ' EUR';
     
     }
 }

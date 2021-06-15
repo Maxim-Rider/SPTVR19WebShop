@@ -51,6 +51,7 @@
       <div class="navbar-nav w-100 d-flex justify-content-end">
       <c:choose>
           <c:when test="${role eq 'ADMIN'}">
+              <a class="nav-link <c:if test="${activeBuyFurnitureForm eq true}">active</c:if>" aria-current="page" href="buyFurnitureForm">Каталог</a>
               <a class="nav-link <c:if test="${activeListFurnitures eq true}">active</c:if>" aria-current="page" href="listFurnitures">Список товара</a>
               <a class="nav-link <c:if test="${activePurchasedFurnitures eq true}">active</c:if>" href="purchaseFurnitureForm">Список купленных товаров</a>
               <a class="nav-link <c:if test="${activeDiscountForms}">active</c:if>" href="discountForm">Скидка</a>
@@ -62,6 +63,7 @@
               
           </c:when>
           <c:when test="${role eq 'MANAGER'}">
+              <a class="nav-link <c:if test="${activeBuyFurnitureForm eq true}">active</c:if>" aria-current="page" href="buyFurnitureForm">Каталог</a>
               <a class="nav-link <c:if test="${activeListFurnitures eq true}">active</c:if>" aria-current="page" href="listFurnitures">Список товара</a>
               <a class="nav-link <c:if test="${activeDiscountForms}">active</c:if>" href="discountForm">Скидка</a>
               <!--<a class="nav-link <c:if test="${activePurchasedFurnitures eq true}">active</c:if>" href="purchaseFurnitureForm">Список купленных товаров</a>-->
@@ -71,6 +73,7 @@
           </c:when>
               
           <c:when test="${role eq 'BUYER'}">
+              <a class="nav-link <c:if test="${activeBuyFurnitureForm eq true}">active</c:if>" aria-current="page" href="buyFurnitureForm">Каталог</a>
               <a class="nav-link <c:if test="${activeListFurnitures eq true}">active</c:if>" aria-current="page" href="listFurnitures">Список товара</a>
               <a class="nav-link <c:if test="${activePurchasedFurnitures eq true}">active</c:if>" href="purchaseFurnitureForm">Список купленных товаров</a>
               <a class="nav-link <c:if test="${activeShowProfile eq true}">active</c:if>"href="showProfile">Профиль</a> 

@@ -94,12 +94,13 @@ class AuthModule{
       console.log('Auth: role - '+sessionStorage.getItem('role'));
       
       if(role===null){
-        document.getElementById("listFurnitures").style.display = 'block';
+        document.getElementById("buyFurnitureForm").style.display = 'block';
+        document.getElementById("listFurnitures").style.display = 'none';
         document.getElementById("showLoginForm").style.display = 'block';
         document.getElementById("logout").style.display = 'none';
         document.getElementById("addFurniture").style.display = 'none';
-        document.getElementById("purchasedFurnitures").style.display = 'none';
-        document.getElementById("discountForm").style.display = 'none';
+      //  document.getElementById("purchasedFurnitures").style.display = 'none';
+     //   document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
         document.getElementById("basket").style.display = 'none';
@@ -107,36 +108,39 @@ class AuthModule{
 
 
       }else if(role==="BUYER"){
-        document.getElementById("listFurnitures").style.display = 'block';
+          document.getElementById("buyFurnitureForm").style.display = 'block';
+        document.getElementById("listFurnitures").style.display = 'none';
         document.getElementById("showLoginForm").style.display = 'none';
         document.getElementById("logout").style.display = 'block';
         document.getElementById("addFurniture").style.display = 'none';
-        document.getElementById("purchasedFurnitures").style.display = 'none';
-        document.getElementById("discountForm").style.display = 'none';
+      //  document.getElementById("purchasedFurnitures").style.display = 'none';
+     //   document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
         document.getElementById("basket").style.display = 'block';
         document.getElementById("showProfile").style.display = 'block';
 
       }else if(role==="MANAGER"){
-        document.getElementById("listFurnitures").style.display = 'block';
+          document.getElementById("buyFurnitureForm").style.display = 'block';
+        document.getElementById("listFurnitures").style.display = 'none';
         document.getElementById("showLoginForm").style.display = 'none';
         document.getElementById("logout").style.display = 'block';
         document.getElementById("addFurniture").style.display = 'block';
-        document.getElementById("purchasedFurnitures").style.display = 'none';
-        document.getElementById("discountForm").style.display = 'none';
+      //  document.getElementById("purchasedFurnitures").style.display = 'none';
+      //  document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'none';
         document.getElementById("adminPanel").style.display = 'none';
         document.getElementById("basket").style.display = 'block';
         document.getElementById("showProfile").style.display = 'block';
 
       }else if(role==="ADMIN"){
-        document.getElementById("listFurnitures").style.display = 'block';
+          document.getElementById("buyFurnitureForm").style.display = 'block';
+        document.getElementById("listFurnitures").style.display = 'none';
         document.getElementById("showLoginForm").style.display = 'none';
         document.getElementById("logout").style.display = 'block';
         document.getElementById("addFurniture").style.display = 'block';
-        document.getElementById("purchasedFurnitures").style.display = 'none';
-        document.getElementById("discountForm").style.display = 'none';
+     //   document.getElementById("purchasedFurnitures").style.display = 'none';
+      //  document.getElementById("discountForm").style.display = 'none';
         document.getElementById("listBuyers").style.display = 'block';
         document.getElementById("adminPanel").style.display = 'block';
         document.getElementById("basket").style.display = 'block';

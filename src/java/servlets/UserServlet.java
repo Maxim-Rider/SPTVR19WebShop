@@ -168,7 +168,7 @@ public class UserServlet extends HttpServlet {
                 }
                 request.getRequestDispatcher(LoginServlet.pathToFile.getString("showBasket")).forward(request, response);
                 break;
-            case "/buyFurnitures":
+            case "/buyFurniture":
                 user = userFacade.find(user.getId());
                 //Получаем список товаров в корзине из сессии
                 listFurnituresInBasket = (List<Furniture>) session.getAttribute("basketList");

@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.json.JsonValue;
 import javax.persistence.Entity;
@@ -29,7 +31,7 @@ public class Buyer implements Serializable, EntityInterface{
     private String lastname;
     private String phone;
     private Integer wallet;
-
+    private List<Furniture> listFurnitures = new ArrayList<>();
     
     
 
@@ -51,7 +53,13 @@ public class Buyer implements Serializable, EntityInterface{
 
     
    
-    
+    public List<Furniture> getListFurnitures() {
+        return listFurnitures;
+    }
+
+    public void setListFurnitures(List<Furniture> listFurnitures) {
+        this.listFurnitures = listFurnitures;
+    } 
     
 
     
@@ -147,7 +155,7 @@ public class Buyer implements Serializable, EntityInterface{
     public double getWalletDouble() {
         return (double)this.wallet/100;
     }
-    
+
 
     public void setWallet(String wallet) throws NumberFormatException {
         wallet = wallet.trim().replaceAll(",", ".");

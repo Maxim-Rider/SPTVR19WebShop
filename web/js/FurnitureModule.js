@@ -78,10 +78,14 @@ class FurnitureModule{
       method: 'POST',
       body: new FormData(document.getElementById('furnitureForm'))
     })
-    if((response).ok){
-      const result = await response.json();
-      document.getElementById('info').innerHTML = result.info;
-      furnitureModule.printListfurnitures();
+    var result = await response.json();
+        if((response).ok){
+          console.log("Request status: " + result.requestStatus);
+          document.getElementById('info').innerHTML = result.info;
+          console.log("Request status: "+result.requestStatus);
+          document.getElementById('context').innerHTML='';
+          furnitureModule.printListfurnitures();
+          furnitureModule.printBuyFurnitureForm();
     }else{
       document.getElementById('info').innerHTML='Ошибка сервера';
     }
@@ -118,11 +122,11 @@ class FurnitureModule{
                     <b>Цена:</b>  <h7 class="card-text m-0">${furniture.price} EUR</h7>
                       <p class="d-inline">
                         <a href="readFurniture?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-info" style="color:white; margin-top: 5px; position: absolute; bottom: 10px; left:15px;">Просмотреть</button></a>           
-                        <a href="addToBasket?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-primary" style="color:white; margin-top: 3px; position: absolute; bottom: 43px; left:15px;">В корзину</button></a>
+                      <!--  <a href="addToBasket?furnitureId=${furniture.id}" class="link text-nowrap"><button class="bg-primary" style="color:white; margin-top: 3px; position: absolute; bottom: 43px; left:15px;">В корзину</button></a>-->
                       </p>
                     </div>`
                     );
-      divForCarts.insertAdjacentElement('beforeend',cart);
+      divForCarts.insertAdjacentElement('beforeend',cart);         
     }
 
     context.insertAdjacentElement('beforeend',divForCarts);
@@ -141,6 +145,106 @@ class FurnitureModule{
     }else{
       document.getElementById('info').innerHTML='Ошибка сервера';
       return null;
+    }
+  }
+  
+  async printBuyFurnitureForm() {
+        const response = await fetch('printBuyFurnitureFormJson',{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset:utf8'
+                }});
+ 
+        var ids = [];
+        var btn_ids = [];
+        var counts = [];
+        var result = await response.json();
+            if (response.ok){
+              console.log("Request status: "+result.requestStatus);
+              var buy_quantity = result.buy_quantity;
+            } else {
+              console.log("Ошибка получения данных");
+            }
+        console.log(result)
+        if (result.requestStatus == "false") {
+            document.getElementById('info').innerHTML = result.info;
+        } else {
+            document.getElementById('context').innerHTML = `
+                <div id="buys" class="row text-center">     
+                    <h3 class="w-100 my-3 text-center" class="display-5">Список товара</h3> 
+                </div>`;
+            for (let furniture of result) {
+                document.getElementById('buys').innerHTML += `
+                <div class="col-md mx-auto">
+                        <input id="furnitureId${furniture.id}" type="text" name="furnitureId${furniture.id}" value="${furniture.id}" hidden>                
+                        <div class="card text-center mx-auto" style="width: 16rem;">
+                            <img style="height: 100%;" src="insertFile/${furniture.cover.path}" class="card-img-top" alt="furniture">
+                            <div class="card-body">
+                                <h5 class="card-title">Товар: ${furniture.name}</h5>
+                                <p class="card-text"><i>Цвет: ${furniture.color}</i></p>
+                                <p class="card-text"><i>Размер: ${furniture.size}</i></p>
+                                <p class="card-text">${furniture.price}$ (${furniture.quantity} на складе)</p>
+                                <input id="c${furniture.id}" value="${furniture.quantity}" hidden>
+                                <button id="btn${furniture.id}a" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal${furniture.id}">
+                                    Купить
+                                </button>
+                                <div class="modal fade" id="exampleModal${furniture.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel"> Подтверждение </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Вы уверены, что хотите купить товар "${furniture.name}" за ${furniture.price} EUR/штука  ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="number" min="1" max="${furniture.quantity}" class="form-control" id="buy_quantity" name="buy_quantity">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">  Нет  </button>
+                                                <button id="btn${furniture.id}" type="submit" class="btn btn-primary">  Да </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>`;
+                                
+                ids.push(furniture.id.toString());
+        }
+        for (let j of ids) {
+            console.log(j)
+            document.getElementById('btn' + j).addEventListener('click', () => { furnitureModule.buyFurniture(j, 1) } );
+        }
+        console.log(ids);
+    
+    }
+  
+  } 
+  
+  async buyFurniture(id, quantity) {
+    const furnitureId = id;
+    const buy_quantity = document.getElementById('buy_quantity').value;
+    const furniture_data = {
+         "furnitureId": furnitureId,
+         "buy_quantity": buy_quantity
+       };
+    console.log(furniture_data)
+    const response = await fetch('buyFurnitureJson',{
+    method: 'POST',
+    body: JSON.stringify(furniture_data)
+        });     
+        
+    var result = await response.json();
+    
+    if (response.ok){
+      console.log("Request status: " + result.requestStatus);
+        document.getElementById('info').innerHTML = result.info;
+        console.log("Request status: "+result.requestStatus);
+        document.getElementById('context').innerHTML='';
+        furnitureModule.printBuyFurnitureForm();
+    } else {
+      console.log("Ошибка получения данных");
     }
   }
 }

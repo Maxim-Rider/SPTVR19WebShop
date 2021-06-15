@@ -88,24 +88,23 @@ public class Furniture implements Serializable{
         this.size = size;
 
     }
-    
-    
-   
-    
-    
-    
-    public void setPrice(String price) {
-       if(price.matches(",")){
-           price = price.replaceAll(",", ".");
-       }
-        try {
-            Double d = Double.parseDouble(price);
-            this.price = (int)(d * 100);
-        } catch (Exception e) {
-            throw new NumberFormatException(price);
-        }
 
-    }
+    
+    
+    
+    
+//    public void setPrice(String price) {
+//       if(price.matches(",")){
+//           price = price.replaceAll(",", ".");
+//       }
+//        try {
+//            Double d = Double.parseDouble(price);
+//            this.price = (int)(d * 100);
+//        } catch (Exception e) {
+//            throw new NumberFormatException(price);
+//        }
+//
+//    }
     
     public String getPriceStr() {
         Double dPrice = (double)this.price/100;
@@ -122,9 +121,9 @@ public class Furniture implements Serializable{
         }
     }
 
-    private void setPrice(Double price) {
-        this.price = (int)(price*100);
-    }
+//    private void setPrice(Double price) {
+//        this.price = (int)(price*100);
+//    }
     
     public String getQuantityToStr(){
         double dQuantity = this.quantity/100;
